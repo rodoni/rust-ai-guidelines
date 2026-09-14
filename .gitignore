@@ -1,0 +1,11 @@
+# Target build directories
+/target
+
+# OS / Editor temporary files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Environment local outputs (optional, depending on workflow)
+# Keep .agents, .opencode, .kilocode if committed as templates
