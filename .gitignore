@@ -7,5 +7,8 @@ Thumbs.db
 *.swp
 *~
 
-# Environment local outputs (optional, depending on workflow)
-# Keep .agents, .opencode, .kilocode if committed as templates
+# Generated deployment targets (output of ./sync.sh)
+.agents/
+.opencode/
+.kilocode/
+AGENTS.md
