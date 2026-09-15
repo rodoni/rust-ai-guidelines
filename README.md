@@ -13,9 +13,11 @@ Inspirado na arquitetura e concisão do repositório [`leonardomso/rust-skills`]
 ## 🎯 Compatibilidade Multi-Ambiente
 
 Projetado para funcionar de forma nativa e sem fricção em múltiplos ambientes:
-- **Google Antigravity** (`.agents/skills/` e `AGENTS.md`)
-- **OpenCode / OpenCodeInterpreter** (`.opencode/` e `AGENTS.md`)
-- **Kilo Code / Cursor / Windsurf** (`.kilocode/` e custom instructions)
+- **Google Antigravity** (`.agents/skills/`, `.agents/rules/` e `.agents/AGENTS.md`)
+- **OpenCode / OpenCodeInterpreter** (`.opencode/rules/` e `.opencode/AGENTS.md`)
+- **Kilo Code / Cursor / Windsurf** (`.kilo/` e `kilo.jsonc`)
+
+> 🛡️ **Instalação Não-Invasiva**: Nenhuma configuração sobrescreve arquivos existentes na raiz do projeto (como seu próprio `AGENTS.md` ou `CLAUDE.md`). Todo o ecossistema é confinado nas pastas de ferramentas (`.agents/`, `.opencode/`, `.kilo/`).
 
 ---
 
@@ -74,19 +76,19 @@ Cada regra em [`rules/`](rules/) possui entre 30 e 60 linhas e segue a estrutura
 O repositório inclui um instalador universal agnóstico que prepara o ambiente desejado em seu projeto:
 
 ### 1. Antigravity
-Configura `.agents/skills/`, `.agents/rules/` e o arquivo `AGENTS.md`:
+Configura `.agents/skills/`, `.agents/rules/` e `.agents/AGENTS.md`:
 ```bash
 ./sync.sh antigravity /caminho/para/seu-projeto-rust
 ```
 
 ### 2. OpenCode
-Configura `.opencode/rules/` e `AGENTS.md`:
+Configura `.opencode/rules/` e `.opencode/AGENTS.md`:
 ```bash
 ./sync.sh opencode /caminho/para/seu-projeto-rust
 ```
 
 ### 3. Kilo Code / Cursor
-Configura `.kilocode/rules/` e as instruções customizadas:
+Configura `.kilo/rules/`, `.kilo/skills/`, `.kilo/agents/`, `.kilo/AGENTS.md` e `kilo.jsonc`:
 ```bash
 ./sync.sh kilocode /caminho/para/seu-projeto-rust
 ```

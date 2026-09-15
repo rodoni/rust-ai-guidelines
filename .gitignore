@@ -8,7 +8,9 @@ Thumbs.db
 *~
 
 # Generated deployment targets (output of ./sync.sh)
-.agents/
-.opencode/
-.kilocode/
-AGENTS.md
+/.agents/
+/.opencode/
+/.kilocode/
+/.kilo/
+/AGENTS.md
+/kilo.jsonc

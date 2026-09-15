@@ -18,7 +18,7 @@ for skill in skills/*; do
     fi
 done
 
-# Copy root AGENTS.md for Antigravity workspace
-cp targets/antigravity/AGENTS.md "$DEST_DIR/AGENTS.md"
+# Copy guidelines inside .agents/ to keep project root clean
+cp targets/antigravity/AGENTS.md "$DEST_DIR/.agents/AGENTS.md"
 
 echo " Antigravity environment configured successfully!"
