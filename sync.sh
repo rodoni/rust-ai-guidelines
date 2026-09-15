@@ -9,9 +9,9 @@ usage() {
 Usage: ./sync.sh <target> [destination_path]
 
 Available targets:
-  antigravity  Deploy to Antigravity (.agents/skills/ and .agents/rules/)
-  opencode     Deploy to OpenCode (.opencode/rules/ and AGENTS.md)
-  kilocode     Deploy to Kilo Code (.kilocode/rules/ and instructions.md)
+  antigravity  Deploy to Antigravity (.agents/skills/, .agents/rules/, .agents/AGENTS.md)
+  opencode     Deploy to OpenCode (.opencode/rules/ and .opencode/AGENTS.md)
+  kilocode     Deploy to Kilo Code (.kilo/{rules,skills,agents,AGENTS.md} and kilo.jsonc)
   all          Deploy to all targets simultaneously
   help         Show this help message
 
