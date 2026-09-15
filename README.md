@@ -31,6 +31,17 @@ Em vez de sobrecarregar um único prompt genérico com dezenas de milhares de to
 | **`rust-safety-auditor`** | [`agents/rust-safety-auditor.md`](agents/rust-safety-auditor.md) | Auditoria de `unsafe`, comentários `// SAFETY:`, sound boundaries e invariantes. |
 | **`rust-reviewer`** | [`agents/rust-reviewer.md`](agents/rust-reviewer.md) | Revisão ágil de código, lints com `#[expect]`, dead code e conformidade. |
 
+### 📊 Matriz de Mapeamento: Agentes ➔ Skills ➔ Regras
+
+| Agente | Skill Primária | Skills Secundárias | Regras Atômicas Enforced (`rules/*.md`) |
+|---|---|---|---|
+| **`rust-lead`** | [`rust-guidelines`](skills/rust-guidelines/SKILL.md) *(Master Hub)* | Todas as 6 skills temáticas | `m-cargo-workspace`, `m-smaller-crates`, `m-mockable-syscalls`, `m-design-for-ai` |
+| **`rust-api-architect`** | [`rust-api`](skills/rust-api/SKILL.md) *(API & Ergonomia)* | `rust-resilience-app`, `rust-macros` | `c-case`, `c-conv`, `c-getter`, `c-common-traits`, `c-send-sync`, `c-newtype`, `c-sealed`, `m-weasel-words`, `m-regular-fn`, `m-avoid-wrappers`, `m-di-hierarchy`, `m-init-builder`, `m-services-clone`, `m-async-fn` |
+| **`rust-perf-optimizer`** | [`rust-perf`](skills/rust-perf/SKILL.md) *(Memória & Async)* | `rust-api`, `rust-resilience-app` | `mem-with-capacity`, `mem-reuse-collections`, `m-box-dst`, `m-shrink-to-fit`, `m-fast-hasher`, `m-async-stack-size`, `m-yield-points`, `m-mimalloc-apps` |
+| **`rust-safety-auditor`** | [`rust-safety`](skills/rust-safety/SKILL.md) *(Soundness & Erros)* | [`rust-ffi`](skills/rust-ffi/SKILL.md), `rust-api` | `unsafe-safety-comment`, `unsafe-minimize-scope`, `m-unsound-prevention`, `m-panic-on-bug`, `m-errors-canonical`, `m-ffi-translates`, `m-isolate-dll-state` |
+| **`rust-reviewer`** | [`rust-resilience-app`](skills/rust-resilience-app/SKILL.md) *(Lints & Contratos)* | `rust-safety`, `rust-api`, `rust-perf` | `m-lint-override-expect`, `c-failure`, `m-macro-helpers`, `m-test-util`, `m-app-error`, `m-design-for-ai` |
+
+
 ---
 
 ## 📦 SKILLS Modulares (`skills/`)
