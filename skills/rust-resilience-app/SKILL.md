@@ -14,6 +14,8 @@ Engineering standards for robust binaries, mockable system boundaries, strict do
 | Rule | Impact | Summary |
 |---|---|---|
 | [`m-mimalloc-apps`](../../rules/m-mimalloc-apps.md) | HIGH | Configure `mimalloc` as the global allocator in application binaries. |
+| [`m-cargo-workspace`](../../rules/m-cargo-workspace.md) | HIGH | Centralize all dependency versions under `[workspace.dependencies]`. |
+| [`m-smaller-crates`](../../rules/m-smaller-crates.md) | HIGH | Decompose monolithic crates into single-responsibility workspace crates. |
 | [`m-app-error`](../../rules/m-app-error.md) | HIGH | Use `anyhow` for application binaries; never in libraries. |
 | [`m-mockable-syscalls`](../../rules/m-mockable-syscalls.md) | HIGH | Design core domain logic "sans I/O" or behind mockable traits. |
 | [`m-test-util`](../../rules/m-test-util.md) | MEDIUM | Gate test fixtures and mock clients behind `feature = "test-util"`. |

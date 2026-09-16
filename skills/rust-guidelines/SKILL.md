@@ -20,12 +20,12 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 
 | Priority | Category | Prefix | Impact | Skill File |
 |---|---|---|---|---|
-| 1 | **Safety & Correctness** | `unsafe-`, `m-safe-`, `m-panic-` | CRITICAL | [rust-safety](../rust-safety/SKILL.md) |
-| 2 | **API & Type Ergonomics** | `c-`, `m-api-`, `m-di-` | HIGH | [rust-api](../rust-api/SKILL.md) |
-| 3 | **Performance & Memory** | `mem-`, `m-perf-`, `m-async-` | HIGH | [rust-perf](../rust-perf/SKILL.md) |
-| 4 | **Apps, Resilience & AI** | `m-app-`, `m-test-`, `m-design-` | MEDIUM | [rust-resilience-app](../rust-resilience-app/SKILL.md) |
-| 5 | **Metaprogramming & Macros**| `m-macro-`, `c-macro-` | MEDIUM | [rust-macros](../rust-macros/SKILL.md) |
-| 6 | **Native FFI** | `m-ffi-` | SPECIALIZED | [rust-ffi](../rust-ffi/SKILL.md) |
+| 1 | **Safety & Correctness** | `unsafe-`, `m-unsound-`, `m-panic-` | CRITICAL | [rust-safety](../rust-safety/SKILL.md) |
+| 2 | **API & Type Ergonomics** | `c-`, `m-` | HIGH | [rust-api](../rust-api/SKILL.md) |
+| 3 | **Performance & Memory** | `mem-`, `m-` | HIGH | [rust-perf](../rust-perf/SKILL.md) |
+| 4 | **Apps, Resilience & AI** | `m-` | MEDIUM | [rust-resilience-app](../rust-resilience-app/SKILL.md) |
+| 5 | **Metaprogramming & Macros**| `m-macro-`, `m-proc-`, `m-example-` | MEDIUM | [rust-macros](../rust-macros/SKILL.md) |
+| 6 | **Native FFI** | `m-ffi-`, `m-isolate-` | SPECIALIZED | [rust-ffi](../rust-ffi/SKILL.md) |
 
 ---
 
@@ -65,6 +65,8 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 
 ### 4. Apps, Resilience & AI (MEDIUM)
 - [`m-mimalloc-apps`](../../rules/m-mimalloc-apps.md) - Configure `mimalloc` as the global allocator in application binaries.
+- [`m-cargo-workspace`](../../rules/m-cargo-workspace.md) - Centralize all dependency versions under `[workspace.dependencies]`.
+- [`m-smaller-crates`](../../rules/m-smaller-crates.md) - Decompose monolithic crates into single-responsibility workspace crates.
 - [`m-app-error`](../../rules/m-app-error.md) - Use `anyhow` for top-level binaries; never in libraries.
 - [`m-mockable-syscalls`](../../rules/m-mockable-syscalls.md) - Design domain logic "sans I/O" or abstract behind traits.
 - [`m-test-util`](../../rules/m-test-util.md) - Gate test fixtures and fakes behind `feature = "test-util"`.
