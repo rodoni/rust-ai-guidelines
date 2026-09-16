@@ -7,7 +7,7 @@ This file configures the specialized Rust Agentic ecosystem for Google Antigravi
 - **`rust-api-architect`**: Public API design and traits.
 - **`rust-perf-optimizer`**: Memory and async throughput.
 - **`rust-safety-auditor`**: Soundness, unsafe, and FFI.
-- **`rust-reviewer`**: Lints and checklist review.
+- **`rust-reviewer`**: Exhaustive compliance, lints, and contract review.
 
 ## Available Skills (`.agents/skills/`)
 The skills are located under `.agents/skills/`:

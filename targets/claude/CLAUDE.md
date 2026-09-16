@@ -15,4 +15,4 @@ This repository follows the **Rust AI Guidelines** for low-context, high-soundne
 - `rust-api-architect`: Ergonomic public APIs, builders, and trait implementations.
 - `rust-perf-optimizer`: Memory reuse, fast hashers, and async stack tuning.
 - `rust-safety-auditor`: Unsafe soundness, FFI boundaries, and panic-free paths.
-- `rust-reviewer`: Clippy `#[expect]` overrides and code hygiene.
+- `rust-reviewer`: Exhaustive compliance review, clippy `#[expect]` overrides, and zero-omission code hygiene.

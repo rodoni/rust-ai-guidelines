@@ -15,7 +15,7 @@ Specialized subagents available in this project (invocable via `@agent-name` or 
 - **`rust-api-architect`**: Ergonomic public API design, RFC 430 conventions, traits, and Newtypes.
 - **`rust-perf-optimizer`**: Memory layout, buffer re-use, mimalloc, and async throughput.
 - **`rust-safety-auditor`**: Soundness verification, `unsafe` scope minimization, and FFI boundaries.
-- **`rust-reviewer`**: Lints with `#[expect]`, dead code detection, and compliance review.
+- **`rust-reviewer`**: Exhaustive compliance review, lints with `#[expect]`, and contracts with zero omissions.
 
 ## Skills (`.kilo/skills/`)
 Modular domain skills loaded on demand:

@@ -42,7 +42,7 @@ Em vez de sobrecarregar um único prompt genérico com dezenas de milhares de to
 | **`rust-api-architect`** | [`agents/rust-api-architect.md`](agents/rust-api-architect.md) | Design de APIs públicas, convenções RFC 430, builders, Newtypes e traits. |
 | **`rust-perf-optimizer`** | [`agents/rust-perf-optimizer.md`](agents/rust-perf-optimizer.md) | Otimização de memória, pré-alocação, buffers, hashers rápidos e async stack. |
 | **`rust-safety-auditor`** | [`agents/rust-safety-auditor.md`](agents/rust-safety-auditor.md) | Auditoria de `unsafe`, comentários `// SAFETY:`, sound boundaries e invariantes. |
-| **`rust-reviewer`** | [`agents/rust-reviewer.md`](agents/rust-reviewer.md) | Revisão ágil de código, lints com `#[expect]`, dead code e conformidade. |
+| **`rust-reviewer`** | [`agents/rust-reviewer.md`](agents/rust-reviewer.md) | Revisão exaustiva de código, lints com `#[expect]`, contratos e conformidade com zero omissões. |
 
 ### 📊 Matriz de Mapeamento: Agentes ➔ Skills ➔ Regras
 
