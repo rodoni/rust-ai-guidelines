@@ -22,3 +22,6 @@ Engineering standards for robust binaries, mockable system boundaries, strict do
 | [`c-failure`](../../rules/c-failure.md) | HIGH | Mandatory `# Errors`, `# Panics`, and `# Safety` doc sections. |
 | [`m-design-for-ai`](../../rules/m-design-for-ai.md) | HIGH | Design code for AI comprehension: strict types and runnable doc tests. |
 | [`m-lint-override-expect`](../../rules/m-lint-override-expect.md) | MEDIUM | Use `#[expect]` over `#[allow]` to eliminate zombie lint suppressions. |
+| [`m-log-not-print`](../../rules/m-log-not-print.md) | HIGH | Production code uses telemetry (`tracing`/`log`), never `println!` or `dbg!`. |
+| [`m-log-structured`](../../rules/m-log-structured.md) | HIGH | Structured telemetry with key-value fields rather than string interpolation. |
+| [`m-features-additive`](../../rules/m-features-additive.md) | HIGH | Cargo features must be strictly additive; never mutually exclusive. |

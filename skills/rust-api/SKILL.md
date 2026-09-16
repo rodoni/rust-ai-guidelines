@@ -27,3 +27,9 @@ Focused, low-context rules for designing idiomatic, predictable, and robust Rust
 | [`m-init-builder`](../../rules/m-init-builder.md) | HIGH | Builder pattern with fallible `.build()` for complex types. |
 | [`m-services-clone`](../../rules/m-services-clone.md) | HIGH | Services and client handles are cheaply `Clone` via `Arc`. |
 | [`m-async-fn`](../../rules/m-async-fn.md) | MEDIUM | Use native `async fn` syntax instead of returning `impl Future`. |
+| [`c-conv-traits`](../../rules/c-conv-traits.md) | HIGH | Implement standard conversion traits (`From`, `TryFrom`, `AsRef`). |
+| [`c-custom-type`](../../rules/c-custom-type.md) | HIGH | Arguments convey meaning via domain types/enums, avoiding bool flags. |
+| [`c-deref`](../../rules/c-deref.md) | HIGH | Only smart pointers implement `Deref` / `DerefMut`. |
+| [`c-generic`](../../rules/c-generic.md) | HIGH | Functions minimize assumptions by using generic bounds (`impl AsRef<Path>`). |
+| [`c-smart-ptr`](../../rules/c-smart-ptr.md) | HIGH | Smart pointers do not introduce inherent methods. |
+| [`m-dont-leak-types`](../../rules/m-dont-leak-types.md) | HIGH | Do not expose unexported foreign crate types in public signatures. |
