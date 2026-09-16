@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 DEST_DIR="${1:-.}"
 echo "==> Setting up Kilo Code Rust Guidelines in: $DEST_DIR"
 
 mkdir -p "$DEST_DIR/.kilo/rules" "$DEST_DIR/.kilo/skills" "$DEST_DIR/.kilo/agents"
 
 # Copy rules
-cp -r rules/* "$DEST_DIR/.kilo/rules/"
+cp -r "$REPO_ROOT/rules/"* "$DEST_DIR/.kilo/rules/"
 
 # Copy skills
-for skill in skills/*; do
+for skill in "$REPO_ROOT/skills/"*; do
     if [ -d "$skill" ]; then
         skill_name=$(basename "$skill")
         mkdir -p "$DEST_DIR/.kilo/skills/$skill_name"
@@ -19,14 +22,14 @@ for skill in skills/*; do
 done
 
 # Copy custom agents/subagents
-cp -r agents/* "$DEST_DIR/.kilo/agents/"
+cp -r "$REPO_ROOT/agents/"* "$DEST_DIR/.kilo/agents/"
 
 # Copy project-level guidelines inside .kilo/ to keep project root clean
-cp targets/kilocode/AGENTS.md "$DEST_DIR/.kilo/AGENTS.md"
+cp "$REPO_ROOT/targets/kilocode/AGENTS.md" "$DEST_DIR/.kilo/AGENTS.md"
 
 # Setup kilo.jsonc configuration
 if [ ! -f "$DEST_DIR/kilo.jsonc" ]; then
-    cp targets/kilocode/kilo.jsonc "$DEST_DIR/kilo.jsonc"
+    cp "$REPO_ROOT/targets/kilocode/kilo.jsonc" "$DEST_DIR/kilo.jsonc"
     echo " Created $DEST_DIR/kilo.jsonc with rule instructions"
 else
     if ! grep -q "\.kilo/rules" "$DEST_DIR/kilo.jsonc"; then
