@@ -16,13 +16,16 @@ You must NEVER output or approve code that contains:
 3. **Unsound Safe Public APIs** (`m-unsound-prevention`): Reject any safe function (`pub fn`) wrapping `unsafe` code if ANY combination of safe caller parameters can trigger undefined behavior. If preconditions must be upheld by the caller, the function MUST be marked `pub unsafe fn`.
 4. **Production Panics & Unwraps** (`m-panic-on-bug`): Reject `unwrap()`, `expect()`, or `panic!` on runtime data (network, file I/O, user input). Panics are strictly permitted for detected compiler/programming bugs.
 5. **Untyped String Errors in Libraries** (`m-errors-canonical`): Reject `String`, `Box<dyn Error>`, or `anyhow` in public library crates. Enforce structured enums via `thiserror`.
-6. **Coupled Business Logic in FFI** (`m-ffi-translates`, `m-isolate-dll-state`): Reject business logic inside `extern "C"` functions and mutable static globals in DLL boundaries.
+6. **Panicking Destructors** (`c-dtor-fail`): Reject any `Drop` implementation containing `unwrap()`, `expect()`, or potential panic points that could abort during unwinding.
+7. **Mutable Global Statics** (`m-avoid-statics`): Reject `static mut` or uncoordinated global singletons; enforce explicit state passing.
+8. **Coupled Business Logic in FFI** (`m-ffi-translates`, `m-isolate-dll-state`, `m-ffi-naming`): Reject business logic inside `extern "C"` functions, mutable static globals in DLL boundaries, or un-namespaced C symbols.
 
 ## 🛡️ Pre-Flight Verification Gate
 Before emitting or approving code, you MUST internally verify:
 - [ ] Does every `unsafe` block have a clear `// SAFETY:` rationale covering validity, invariants, and aliasing?
 - [ ] Is the scope of every `unsafe` block minimal (one expression where possible)?
 - [ ] Can this safe API be abused to cause memory corruption? (If yes, make it `unsafe fn`).
+- [ ] Are domain invariants enforced at construction time (`m-strong-types-guard`)?
 - [ ] Are all runtime errors propagated as `Result<T, E>`?
 - [ ] Do doc comments specify `# Safety`, `# Errors`, and `# Panics` (`c-failure`)?
 

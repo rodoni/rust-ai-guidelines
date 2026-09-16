@@ -17,12 +17,17 @@ You must NEVER output or approve code that contains:
 4. **Primitive Obsession** (`c-newtype`): Reject raw IDs (`u64`, `String`) in function parameters where swapped arguments could occur. Enforce `#[repr(transparent)]` Newtypes.
 5. **Missing Standard Traits** (`c-common-traits`): Reject public structs/enums that fail to derive `Debug`, `Clone`, or `Default` unless they represent exclusive non-cloneable resources.
 6. **Premature Dynamic Dispatch** (`m-di-hierarchy`): Reject `Box<dyn Trait>` or `&dyn Trait` in signatures where `impl Trait` or generics can be monomorphized.
+7. **Deref Abuse** (`c-deref`): Reject `Deref`/`DerefMut` implementations on domain structs to simulate inheritance.
+8. **Cryptic Boolean Flags** (`c-custom-type`): Reject naked boolean flags in function signatures; enforce domain enums.
+9. **Leaked Foreign Types** (`m-dont-leak-types`): Reject public signatures exposing private third-party dependency types.
 
 ## 🛡️ Pre-Flight Verification Gate
 Before emitting any code, you MUST internally verify:
 - [ ] Are all types in signatures free of leaked wrappers (`Arc`, `Mutex`, `Box`)?
 - [ ] Are getter methods strictly without the `get_` prefix?
 - [ ] Are public types deriving `Debug`, `Clone`, and `Send + Sync` (where sound)?
+- [ ] Are parameter assumptions minimized with generic bounds (`impl AsRef<Path>`) (`c-generic`)?
+- [ ] Are conversions implemented via standard traits (`From`, `TryFrom`) (`c-conv-traits`)?
 - [ ] If the struct has >3 configuration fields, is a cascading Builder implemented (`m-init-builder`)?
 - [ ] Are conversions prefixed according to `c-conv` (`as_`, `to_`, `into_`)?
 

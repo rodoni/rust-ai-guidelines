@@ -37,6 +37,9 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`m-unsound-prevention`](../../rules/m-unsound-prevention.md) - Safe public APIs wrapping `unsafe` must be 100% sound under all inputs.
 - [`m-panic-on-bug`](../../rules/m-panic-on-bug.md) - Panics are strictly for programming bugs; use `Result` for runtime fallibility.
 - [`m-errors-canonical`](../../rules/m-errors-canonical.md) - Library errors must be typed enums via `thiserror`.
+- [`c-dtor-fail`](../../rules/c-dtor-fail.md) - Destructors (`Drop` trait) must never panic.
+- [`m-avoid-statics`](../../rules/m-avoid-statics.md) - Avoid mutable global statics; pass state explicitly.
+- [`m-strong-types-guard`](../../rules/m-strong-types-guard.md) - Enforce domain invariants upon type construction (*Parse, Don't Validate*).
 
 ### 2. API & Ergonomics (HIGH)
 - [`c-case`](../../rules/c-case.md) - Strict RFC 430 casing conventions.
@@ -53,6 +56,12 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`m-init-builder`](../../rules/m-init-builder.md) - Use the Builder pattern with fallible `.build()` for complex structs.
 - [`m-services-clone`](../../rules/m-services-clone.md) - Service/client structs implement cheap `Clone` via internal `Arc`.
 - [`m-async-fn`](../../rules/m-async-fn.md) - Use `async fn` syntax instead of manually returning `impl Future`.
+- [`c-conv-traits`](../../rules/c-conv-traits.md) - Implement standard conversion traits (`From`, `TryFrom`, `AsRef`).
+- [`c-custom-type`](../../rules/c-custom-type.md) - Arguments convey meaning via domain types/enums, avoiding bool flags.
+- [`c-deref`](../../rules/c-deref.md) - Only smart pointers implement `Deref` / `DerefMut`.
+- [`c-generic`](../../rules/c-generic.md) - Functions minimize assumptions by using generic bounds (`impl AsRef<Path>`).
+- [`c-smart-ptr`](../../rules/c-smart-ptr.md) - Smart pointers do not introduce inherent methods.
+- [`m-dont-leak-types`](../../rules/m-dont-leak-types.md) - Do not expose unexported foreign crate types in public signatures.
 
 ### 3. Performance & Memory (HIGH)
 - [`mem-with-capacity`](../../rules/mem-with-capacity.md) - Always preallocate collection capacity when size is known.
@@ -73,6 +82,9 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`c-failure`](../../rules/c-failure.md) - Mandatory `# Errors`, `# Panics`, and `# Safety` doc sections.
 - [`m-design-for-ai`](../../rules/m-design-for-ai.md) - Design code for AI comprehension: strict types and runnable doc tests.
 - [`m-lint-override-expect`](../../rules/m-lint-override-expect.md) - Use `#[expect]` over `#[allow]` to prevent zombie lints.
+- [`m-log-not-print`](../../rules/m-log-not-print.md) - Production code uses telemetry (`tracing`/`log`), never `println!` or `dbg!`.
+- [`m-log-structured`](../../rules/m-log-structured.md) - Structured telemetry with key-value fields rather than string interpolation.
+- [`m-features-additive`](../../rules/m-features-additive.md) - Cargo features must be strictly additive; never mutually exclusive.
 
 ### 5. Metaprogramming & Macros (MEDIUM)
 - [`m-macro-last-resort`](../../rules/m-macro-last-resort.md) - Treat macros as a last resort; prefer functions and traits.
@@ -83,3 +95,4 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 ### 6. Native FFI (SPECIALIZED)
 - [`m-ffi-translates`](../../rules/m-ffi-translates.md) - FFI crates only translate types; core logic belongs in pure Rust crates.
 - [`m-isolate-dll-state`](../../rules/m-isolate-dll-state.md) - Return opaque pointers and isolate dynamic library state.
+- [`m-ffi-naming`](../../rules/m-ffi-naming.md) - Exported C-ABI functions follow strict `<crate>_<type>_<method>` naming.
