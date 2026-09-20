@@ -13,14 +13,31 @@ struct Account {
     balance: Mutex<u64>,
 }
 
-fn transfer(from: &Account, to: &Account, amount: u64) {
+#[derive(Debug)]
+enum TransferError {
+    SameAccount,
+    NonUniqueAccountIds,
+}
+
+fn transfer(from: &Account, to: &Account, amount: u64) -> Result<(), TransferError> {
+    if std::ptr::eq(from, to) {
+        return Err(TransferError::SameAccount);
+    }
+    if from.id == to.id {
+        return Err(TransferError::NonUniqueAccountIds);
+    }
+
     // DEADLOCK HAZARD: If two threads transfer between each other simultaneously!
     let mut f = from.balance.lock().unwrap();
     let mut t = to.balance.lock().unwrap();
     *f -= amount;
     *t += amount;
+    Ok(())
 }
 ```
+
+The ordering key must be unique for every lock participating in the protocol. Reject
+self-transfers and duplicate keys before acquiring either lock.
 
 ## Good
 ```rust

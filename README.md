@@ -20,7 +20,7 @@ Diferente de abordagens ingênuas que despejam livros inteiros na janela de cont
 3. **Concorrência e Atômicos de Baixo Nível**: Sincronização causal `Release`/`Acquire`, eliminação de spinlocks em user-space, cache line padding contra *false sharing* e prevenção estrita de deadlocks.
 4. **Eficiência de Memória e Compilação**: Pré-alocação cirúrgica, reaproveitamento de buffers (`.clear()`), `Box<[T]>`, ordenação de campos contra padding e iteração zero-allocation.
 5. **Ergonomia e Robustez de APIs**: Typestate pattern, Newtypes contra obsessão primitiva, re-exportação de dependências públicas e flexibilidade de closures.
-6. **Resiliência e Observabilidade Corporativa**: Telemetria estruturada (`tracing`), ausência de `println!` em produção, features estritamente aditivas e `[workspace.dependencies]` centralizado.
+6. **Resiliência e Observabilidade Corporativa**: Telemetria estruturada (`tracing`), separação entre logging e saída deliberada de CLI, features preferencialmente aditivas e `[workspace.dependencies]` centralizado.
 
 > ⚡ **Zero Token Waste**: Cada regra é atômica (30 a 60 linhas), auto-contida e carregada **sob demanda** pelos agentes especializados.
 
@@ -82,7 +82,7 @@ As diretrizes são organizadas em skills temáticas carregadas sob demanda:
 
 ## ⚡ Regras Atômicas de Baixo Contexto (`rules/`)
 
-Cada regra em [`rules/`](rules/) possui entre 30 e 60 linhas e segue a estrutura padronizada:
+As regras em [`rules/`](rules/) seguem uma estrutura padronizada, com conteúdo conciso e carregamento sob demanda:
 - **Imperativo de 1 linha**: Orientação imediata.
 - **Why It Matters**: 1 a 2 sentenças técnicas explicando o impacto.
 - **Bad**: Snippet curto demonstrando o antipadrão.
@@ -110,7 +110,7 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Segurança & Soundness** | [`unsafe-safety-comment`](rules/unsafe-safety-comment.md) | Pragmatic / Soundness | Every `unsafe` block must have an explicit `// SAFETY:` comment justifying why it is sound. |
 | **Segurança & Soundness** | [`er-casts-avoid-as`](rules/er-casts-avoid-as.md) | Effective Rust (Item 5) | Avoid numeric `as` casts that silently truncate or change sign; use `TryFrom`/`TryInto`. |
 | **Segurança & Soundness** | [`er-raii-guard`](rules/er-raii-guard.md) | Effective Rust (Item 19) | Encapsulate cleanup logic and temporary state resets into RAII guard types with `Drop`. |
-| **Concorrência & Atômicos** | [`atomic-ordering-pair`](rules/atomic-ordering-pair.md) | Mara Bos Atomics & Locks | Pair `Release` stores with `Acquire` loads; avoid unjustified `Relaxed` or lazy `SeqCst`. |
+| **Concorrência & Atômicos** | [`atomic-ordering-pair`](rules/atomic-ordering-pair.md) | Mara Bos Atomics & Locks | Choose atomic orderings from the algorithm's synchronization relationship. |
 | **Concorrência & Atômicos** | [`atomic-cas-weak-loops`](rules/atomic-cas-weak-loops.md) | Mara Bos Atomics & Locks | Use `compare_exchange_weak` instead of `compare_exchange` inside retry loops. |
 | **Concorrência & Atômicos** | [`sync-avoid-spinlock`](rules/sync-avoid-spinlock.md) | Mara Bos Atomics & Locks | Never implement busy-wait spinlocks in user space; use OS blocking locks or futexes. |
 | **Concorrência & Atômicos** | [`sync-cacheline-padding`](rules/sync-cacheline-padding.md) | Mara Bos Atomics & Locks | Pad hot atomic variables across threads to avoid cache line false sharing. |
@@ -140,12 +140,12 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **API & Ergonomia** | [`er-closure-traits`](rules/er-closure-traits.md) | Effective Rust (Item 10) | Accept the least restrictive closure trait in public APIs (`Fn` > `FnMut` > `FnOnce`). |
 | **Performance & Memória** | [`m-async-stack-size`](rules/m-async-stack-size.md) | Microsoft Pragmatic Rust | Box large state buffers across `.await` points to avoid giant future frame sizes. |
 | **Performance & Memória** | [`m-box-dst`](rules/m-box-dst.md) | Microsoft Pragmatic Rust | Use `Box<[T]>` or `Box<str>` instead of `Vec<T>` or `String` for immutable owned sequences. |
-| **Performance & Memória** | [`m-fast-hasher`](rules/m-fast-hasher.md) | Microsoft Pragmatic Rust | Use a fast non-cryptographic hasher (`ahash` or `foldhash`) for internal HashMaps. |
+| **Performance & Memória** | [`m-fast-hasher`](rules/m-fast-hasher.md) | Microsoft Pragmatic Rust | Evaluate a fast non-cryptographic hasher for internal HashMaps with representative benchmarks. |
 | **Performance & Memória** | [`m-shrink-to-fit`](rules/m-shrink-to-fit.md) | Microsoft Pragmatic Rust | Consider `shrink_to_fit()` after measuring long-lived collection growth. |
 | **Performance & Memória** | [`m-yield-points`](rules/m-yield-points.md) | Microsoft Pragmatic Rust | Insert cooperative yield points in long-running CPU-bound loops in async tasks. |
 | **Performance & Memória** | [`mem-reuse-collections`](rules/mem-reuse-collections.md) | Pragmatic / Soundness | Clear and reuse existing buffer allocations across iterations instead of allocating new ones. |
 | **Performance & Memória** | [`mem-with-capacity`](rules/mem-with-capacity.md) | Pragmatic / Soundness | Reserve capacity when a reliable estimate makes it worthwhile. |
-| **Performance & Memória** | [`sys-struct-field-ordering`](rules/sys-struct-field-ordering.md) | Programming Rust | Order struct fields from largest alignment to smallest to eliminate padding holes. |
+| **Performance & Memória** | [`sys-struct-field-ordering`](rules/sys-struct-field-ordering.md) | Programming Rust | Order fields deliberately in layout-sensitive performance-critical structs. |
 | **Performance & Memória** | [`sys-iterator-zero-allocation`](rules/sys-iterator-zero-allocation.md) | Programming Rust | Chain iterators lazily without intermediate heap allocations until the final consumption point. |
 | **Performance & Memória** | [`sys-dispatch-tradeoff`](rules/sys-dispatch-tradeoff.md) | Programming Rust / Effective | Use static dispatch in hot loops; dynamic dispatch (`dyn`) on cold paths to curtail binary bloat. |
 | **Apps, Resiliência & AI** | [`c-failure`](rules/c-failure.md) | Rust API Guidelines | Public API documentation must contain explicit `# Errors`, `# Panics`, and `# Safety` sections. |
@@ -154,7 +154,7 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Apps, Resiliência & AI** | [`m-design-for-ai`](rules/m-design-for-ai.md) | Microsoft Pragmatic Rust | Design APIs and modules for AI comprehension: idiomatic patterns, strong types, and testable examples. |
 | **Apps, Resiliência & AI** | [`m-features-additive`](rules/m-features-additive.md) | Microsoft Pragmatic Rust | Prefer additive features; make exclusive backends explicit and diagnosable. |
 | **Apps, Resiliência & AI** | [`m-lint-override-expect`](rules/m-lint-override-expect.md) | Microsoft Pragmatic Rust | Use `#[expect(clippy::...)]` instead of `#[allow(clippy::...)]` for deliberate lint suppressions. |
-| **Apps, Resiliência & AI** | [`m-log-not-print`](rules/m-log-not-print.md) | Microsoft Pragmatic Rust | Production code uses structured telemetry (`tracing`/`log`), never `println!`, `eprintln!`, or `dbg!`. |
+| **Apps, Resiliência & AI** | [`m-log-not-print`](rules/m-log-not-print.md) | Microsoft Pragmatic Rust | Use telemetry for diagnostics; reserve stdout/stderr for deliberate presentation output. |
 | **Apps, Resiliência & AI** | [`m-log-structured`](rules/m-log-structured.md) | Microsoft Pragmatic Rust | Emit telemetry events and spans with explicit key-value fields rather than formatted string interpolation. |
 | **Apps, Resiliência & AI** | [`m-mimalloc-apps`](rules/m-mimalloc-apps.md) | Microsoft Pragmatic Rust | Evaluate `mimalloc` in application binaries when benchmarks justify it. |
 | **Apps, Resiliência & AI** | [`m-mockable-syscalls`](rules/m-mockable-syscalls.md) | Microsoft Pragmatic Rust | Design core domain logic "sans I/O" or abstract system calls behind mockable traits. |

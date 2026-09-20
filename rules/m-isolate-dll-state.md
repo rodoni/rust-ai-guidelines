@@ -10,7 +10,7 @@ When multiple host applications or plugins load a shared dynamic library, global
 // Global mutable static shared across all host loaders
 static mut GLOBAL_SESSION: Option<Session> = None;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn mycrate_session_init() {
     unsafe { GLOBAL_SESSION = Some(Session::new()); }
 }
@@ -21,7 +21,7 @@ pub extern "C" fn mycrate_session_init() {
 // Return an opaque instance handle to the host caller
 pub struct OpaqueSession(Session);
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn mycrate_session_create() -> *mut OpaqueSession {
     let session = Box::new(OpaqueSession(Session::new()));
     Box::into_raw(session)
@@ -30,7 +30,7 @@ pub extern "C" fn mycrate_session_create() -> *mut OpaqueSession {
 /// # Safety
 /// `ptr` must be null or a pointer previously returned by
 /// [`mycrate_session_create`] and not previously destroyed.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn mycrate_session_destroy(ptr: *mut OpaqueSession) {
     if !ptr.is_null() {
         // SAFETY: the function contract requires `ptr` to originate from
