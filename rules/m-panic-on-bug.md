@@ -3,7 +3,7 @@
 > Panics are exclusively for impossible invariants and programming bugs; use `Result` for runtime failures.
 
 ## Why It Matters
-Panics abruptly abort threads or processes. Crates that panic on bad network packets, invalid user inputs, or disk failures make client applications unreliable and prone to denial-of-service.
+Panics may unwind the current thread or abort the process when configured to do so. Crates that panic on bad network packets, invalid user inputs, or disk failures make client applications unreliable and prone to denial-of-service.
 
 ## Bad
 ```rust

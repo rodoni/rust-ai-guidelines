@@ -3,7 +3,7 @@
 > Centralize all dependency versions under `[workspace.dependencies]` at the workspace root.
 
 ## Why It Matters
-When member crates declare their own dependency versions independently, version drift inevitably occurs. This causes multiple incompatible versions of the same crate to be compiled into the binary, bloating build times, increasing binary size, and triggering cryptic type-mismatch compiler errors.
+When member crates declare dependency requirements independently, version drift becomes harder to review and compatible requirements may still be written inconsistently. Cargo unifies compatible versions, but incompatible requirements can result in multiple versions, larger builds, or type mismatches when types cross crate boundaries. Centralizing workspace requirements makes the intended policy visible.
 
 ## Bad
 ```toml

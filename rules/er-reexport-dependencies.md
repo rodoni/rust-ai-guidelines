@@ -3,7 +3,7 @@
 > Re-export types from third-party crates when they appear in your crate's public API surface.
 
 ## Why It Matters
-When a public function or struct exposes a type from a dependency (e.g., `url::Url`, `http::HeaderMap`), downstream consumers must depend on that exact same crate version. If the consumer uses a different major/minor version, Cargo treats them as distinct incompatible types, causing compile errors. Re-exporting guarantees version alignment.
+When a public function or struct exposes a type from a dependency (e.g., `url::Url`, `http::HeaderMap`), consumers that directly construct or manipulate that type need a compatible version. Re-exporting gives consumers a canonical path and makes the intended dependency version easier to use, but does not make unrelated crate versions compatible.
 
 ## Bad
 ```rust

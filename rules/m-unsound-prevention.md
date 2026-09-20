@@ -26,7 +26,8 @@ impl<'a> SafeSlice<'a> {
 impl<'a> SafeSlice<'a> {
     // Marked `unsafe fn` because caller must uphold pointer validity invariants
     /// # Safety
-    /// `ptr` must be non-null, aligned, and point to `len` initialized bytes.
+    /// `ptr` must be non-null, aligned, and point to `len` initialized bytes
+    /// within one allocated object. `len` must not exceed `isize::MAX`.
     pub unsafe fn from_raw_parts(ptr: *const u8, len: usize) -> Self {
         SafeSlice { ptr, len, _marker: std::marker::PhantomData }
     }

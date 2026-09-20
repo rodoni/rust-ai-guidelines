@@ -3,7 +3,7 @@
 > Encapsulate state cleanup and resource release into RAII guard types with `Drop` implementations.
 
 ## Why It Matters
-Manually resetting flags, closing handles, or unlocking resources before returning is fragile. An early return via `?`, a panic during stack unwinding, or an unhandled branch skips manual cleanup, leaking resources or leaving data structures in poisoned states. RAII guards guarantee cleanup on every exit path.
+Manually resetting flags, closing handles, or unlocking resources before returning is fragile. An early return via `?`, a panic during stack unwinding, or an unhandled branch skips manual cleanup, leaking resources or leaving data structures in poisoned states. RAII guards perform cleanup on normal scope exit and during unwinding; they do not run after process aborts, `process::exit`, or deliberate leaks.
 
 ## Bad
 ```rust

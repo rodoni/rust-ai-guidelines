@@ -3,7 +3,7 @@
 > Enforce domain invariants upon type construction (*Parse, Don't Validate*).
 
 ## Why It Matters
-Validating data repeatedly at every function call site is fragile; developers and AI agents inevitably miss checks. Validating once inside a constructor and returning a dedicated typed wrapper guarantees that any instance in existence is statically proven valid.
+Validating data repeatedly at every function call site is fragile; checks are easy to miss. Validating once inside a constructor and returning a dedicated typed wrapper establishes a runtime-validated invariant that the type can preserve for later operations.
 
 ## Bad
 ```rust
@@ -31,6 +31,8 @@ pub struct EmailAddress(String);
 impl EmailAddress {
     // Parse once at the boundary:
     pub fn parse(raw: String) -> Result<Self, InvalidEmailError> {
+        // Simplified example predicate; real validation should use the domain's
+        // complete syntax and policy requirements.
         if raw.contains('@') && !raw.starts_with('@') {
             Ok(Self(raw))
         } else {

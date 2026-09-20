@@ -109,11 +109,11 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Segurança & Soundness** | [`unsafe-minimize-scope`](rules/unsafe-minimize-scope.md) | Pragmatic / Soundness | Keep `unsafe` blocks as small as possible; never wrap safe operations inside `unsafe`. |
 | **Segurança & Soundness** | [`unsafe-safety-comment`](rules/unsafe-safety-comment.md) | Pragmatic / Soundness | Every `unsafe` block must have an explicit `// SAFETY:` comment justifying why it is sound. |
 | **Segurança & Soundness** | [`er-casts-avoid-as`](rules/er-casts-avoid-as.md) | Effective Rust (Item 5) | Avoid numeric `as` casts that silently truncate or change sign; use `TryFrom`/`TryInto`. |
-| **Segurança & Soundness** | [`er-raii-guard`](rules/er-raii-guard.md) | Effective Rust (Item 19) | Encapsulate cleanup logic and temporary state resets into RAII guard types with `Drop`. |
+| **Segurança & Soundness** | [`er-raii-guard`](rules/er-raii-guard.md) | Effective Rust (RAII/`Drop` guidance) | Encapsulate cleanup logic and temporary state resets into RAII guard types with `Drop`. |
 | **Concorrência & Atômicos** | [`atomic-ordering-pair`](rules/atomic-ordering-pair.md) | Mara Bos Atomics & Locks | Choose atomic orderings from the algorithm's synchronization relationship. |
 | **Concorrência & Atômicos** | [`atomic-cas-weak-loops`](rules/atomic-cas-weak-loops.md) | Mara Bos Atomics & Locks | Use `compare_exchange_weak` instead of `compare_exchange` inside retry loops. |
-| **Concorrência & Atômicos** | [`sync-avoid-spinlock`](rules/sync-avoid-spinlock.md) | Mara Bos Atomics & Locks | Never implement busy-wait spinlocks in user space; use OS blocking locks or futexes. |
-| **Concorrência & Atômicos** | [`sync-cacheline-padding`](rules/sync-cacheline-padding.md) | Mara Bos Atomics & Locks | Pad hot atomic variables across threads to avoid cache line false sharing. |
+| **Concorrência & Atômicos** | [`sync-avoid-spinlock`](rules/sync-avoid-spinlock.md) | Mara Bos Atomics & Locks | Avoid unbounded spinning; prefer blocking or bounded adaptive synchronization. |
+| **Concorrência & Atômicos** | [`sync-cacheline-padding`](rules/sync-cacheline-padding.md) | Mara Bos Atomics & Locks | Consider padding concurrently mutated hot variables to reduce false sharing when justified. |
 | **Concorrência & Atômicos** | [`sync-lock-hierarchy`](rules/sync-lock-hierarchy.md) | Mara Bos / Effective Rust | Enforce a strict, documented acquisition order when acquiring multiple locks. |
 | **API & Ergonomia** | [`c-case`](rules/c-case.md) | Rust API Guidelines | Follow RFC 430 casing conventions strictly. |
 | **API & Ergonomia** | [`c-common-traits`](rules/c-common-traits.md) | Rust API Guidelines | Eagerly implement or derive standard library traits on public types. |
@@ -135,11 +135,11 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **API & Ergonomia** | [`m-regular-fn`](rules/m-regular-fn.md) | Microsoft Pragmatic Rust | Prefer regular standalone functions over empty dummy structs with associated functions. |
 | **API & Ergonomia** | [`m-services-clone`](rules/m-services-clone.md) | Microsoft Pragmatic Rust | Make service and client handle structs cheaply `Clone` using internal shared state. |
 | **API & Ergonomia** | [`m-weasel-words`](rules/m-weasel-words.md) | Microsoft Pragmatic Rust | Eliminate vague "weasel words" (Helper, Manager, Common, Data, Info) from names. |
-| **API & Ergonomia** | [`er-typestate-pattern`](rules/er-typestate-pattern.md) | Effective Rust (Item 4) | Encode lifecycle states into generic phantom types (Typestate) to make illegal transitions impossible. |
-| **API & Ergonomia** | [`er-reexport-dependencies`](rules/er-reexport-dependencies.md) | Effective Rust (Item 24) | Re-export types from third-party crates when they appear in your public API surface. |
-| **API & Ergonomia** | [`er-closure-traits`](rules/er-closure-traits.md) | Effective Rust (Item 10) | Accept the least restrictive closure trait in public APIs (`Fn` > `FnMut` > `FnOnce`). |
-| **Performance & Memória** | [`m-async-stack-size`](rules/m-async-stack-size.md) | Microsoft Pragmatic Rust | Box large state buffers across `.await` points to avoid giant future frame sizes. |
-| **Performance & Memória** | [`m-box-dst`](rules/m-box-dst.md) | Microsoft Pragmatic Rust | Use `Box<[T]>` or `Box<str>` instead of `Vec<T>` or `String` for immutable owned sequences. |
+| **API & Ergonomia** | [`er-typestate-pattern`](rules/er-typestate-pattern.md) | Effective Rust / type-state guidance | Encode lifecycle states into generic phantom types when the lifecycle is statically known. |
+| **API & Ergonomia** | [`er-reexport-dependencies`](rules/er-reexport-dependencies.md) | Effective Rust / public API guidance | Re-export types from third-party crates when they appear in your public API surface. |
+| **API & Ergonomia** | [`er-closure-traits`](rules/er-closure-traits.md) | Effective Rust / standard traits guidance | Accept the least restrictive closure trait required by the call pattern. |
+| **Performance & Memória** | [`m-async-stack-size`](rules/m-async-stack-size.md) | Microsoft Pragmatic Rust | Measure and reduce large state held across `.await`; boxing is one possible technique. |
+| **Performance & Memória** | [`m-box-dst`](rules/m-box-dst.md) | Microsoft Pragmatic Rust | Consider boxed slices for frequently instantiated immutable internal sequences. |
 | **Performance & Memória** | [`m-fast-hasher`](rules/m-fast-hasher.md) | Microsoft Pragmatic Rust | Evaluate a fast non-cryptographic hasher for internal HashMaps with representative benchmarks. |
 | **Performance & Memória** | [`m-shrink-to-fit`](rules/m-shrink-to-fit.md) | Microsoft Pragmatic Rust | Consider `shrink_to_fit()` after measuring long-lived collection growth. |
 | **Performance & Memória** | [`m-yield-points`](rules/m-yield-points.md) | Microsoft Pragmatic Rust | Insert cooperative yield points in long-running CPU-bound loops in async tasks. |
@@ -147,9 +147,9 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Performance & Memória** | [`mem-with-capacity`](rules/mem-with-capacity.md) | Pragmatic / Soundness | Reserve capacity when a reliable estimate makes it worthwhile. |
 | **Performance & Memória** | [`sys-struct-field-ordering`](rules/sys-struct-field-ordering.md) | Programming Rust | Order fields deliberately in layout-sensitive performance-critical structs. |
 | **Performance & Memória** | [`sys-iterator-zero-allocation`](rules/sys-iterator-zero-allocation.md) | Programming Rust | Chain iterators lazily without intermediate heap allocations until the final consumption point. |
-| **Performance & Memória** | [`sys-dispatch-tradeoff`](rules/sys-dispatch-tradeoff.md) | Programming Rust / Effective | Use static dispatch in hot loops; dynamic dispatch (`dyn`) on cold paths to curtail binary bloat. |
-| **Apps, Resiliência & AI** | [`c-failure`](rules/c-failure.md) | Rust API Guidelines | Public API documentation must contain explicit `# Errors`, `# Panics`, and `# Safety` sections. |
-| **Apps, Resiliência & AI** | [`m-app-error`](rules/m-app-error.md) | Microsoft Pragmatic Rust | Use `anyhow` for top-level application binary error handling, but never in library crates. |
+| **Performance & Memória** | [`sys-dispatch-tradeoff`](rules/sys-dispatch-tradeoff.md) | Programming Rust / Effective | Weigh static and dynamic dispatch against code size, compile time, workload, and API ergonomics. |
+| **Apps, Resiliência & AI** | [`c-failure`](rules/c-failure.md) | Rust API Guidelines | Document `# Errors`, `# Panics`, and `# Safety` when applicable. |
+| **Apps, Resiliência & AI** | [`m-app-error`](rules/m-app-error.md) | Microsoft Pragmatic Rust | Use application error aggregation at the boundary; public libraries expose typed errors. |
 | **Apps, Resiliência & AI** | [`m-cargo-workspace`](rules/m-cargo-workspace.md) | Microsoft Pragmatic Rust | Centralize all dependency versions under `[workspace.dependencies]` at the workspace root. |
 | **Apps, Resiliência & AI** | [`m-design-for-ai`](rules/m-design-for-ai.md) | Microsoft Pragmatic Rust | Design APIs and modules for AI comprehension: idiomatic patterns, strong types, and testable examples. |
 | **Apps, Resiliência & AI** | [`m-features-additive`](rules/m-features-additive.md) | Microsoft Pragmatic Rust | Prefer additive features; make exclusive backends explicit and diagnosable. |
@@ -164,8 +164,8 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Metaprogramação & Macros** | [`m-macro-helpers`](rules/m-macro-helpers.md) | Microsoft Pragmatic Rust | Re-export external third-party dependencies used in macro expansion under `#[doc(hidden)] pub mod _private`. |
 | **Metaprogramação & Macros** | [`m-macro-last-resort`](rules/m-macro-last-resort.md) | Microsoft Pragmatic Rust | Treat macros as a tool of last resort; prefer functions, traits, and generics. |
 | **Metaprogramação & Macros** | [`m-proc-impl`](rules/m-proc-impl.md) | Microsoft Pragmatic Rust | Separate procedural macro logic into an internal implementation crate with unit tests. |
-| **Native FFI** | [`m-ffi-naming`](rules/m-ffi-naming.md) | Microsoft Pragmatic Rust | Exported C-ABI functions should follow `<crate>_<type>_<method>` naming. |
-| **Native FFI** | [`m-ffi-translates`](rules/m-ffi-translates.md) | Microsoft Pragmatic Rust | FFI crates must only translate types and calls; business logic belongs in pure Rust core crates. |
+| **Native FFI** | [`m-ffi-naming`](rules/m-ffi-naming.md) | Local convention informed by FFI practices | Exported C-ABI functions should use an explicit, collision-resistant namespace. |
+| **Native FFI** | [`m-ffi-translates`](rules/m-ffi-translates.md) | Microsoft Pragmatic Rust / FFI practices | FFI boundary crates translate types and calls; business logic belongs in pure Rust core crates. |
 | **Native FFI** | [`m-isolate-dll-state`](rules/m-isolate-dll-state.md) | Microsoft Pragmatic Rust | Isolate global runtime state when exposing Rust libraries as dynamic libraries (DLLs/so/dylib). |
 
 ---

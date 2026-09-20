@@ -19,7 +19,7 @@ for record in stream {
 ```rust
 let mut buffer = Vec::with_capacity(1024);
 for record in stream {
-    buffer.clear(); // Keeps allocated memory, 0 new allocations
+    buffer.clear(); // Keeps the current capacity; growth may still allocate
     record.serialize_into(&mut buffer);
     sink.write_all(&buffer);
 }

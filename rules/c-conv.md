@@ -7,7 +7,7 @@ Predictable prefixing immediately tells callers the cost and ownership semantics
 
 ## Convention Summary
 - `as_`: Free/cheap borrowed-to-borrowed conversion (`&T -> &U`).
-- `to_`: Expensive borrowed-to-owned conversion (`&T -> U`).
+- `to_`: A conversion that may allocate or copy, commonly borrowed-to-owned (`&T -> U`), but also borrowed-to-borrowed or owned-to-owned when that matches the API semantics.
 - `into_`: Value-consuming conversion (`T -> U`).
 
 ## Bad

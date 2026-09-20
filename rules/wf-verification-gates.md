@@ -3,7 +3,7 @@
 > Pass all deterministic verification gates (`cargo fmt`, `cargo check`, `cargo clippy`, `cargo test`) before declaring a task complete.
 
 ## Why It Matters
-AI agents often declare success based on intuitive reasoning while missing subtle type mismatches, unused imports, lint warnings, or broken tests. Enforcing an unskippable deterministic verification pipeline provides mathematical proof of correctness and ensures zero regressions enter the codebase.
+AI agents often declare success based on intuitive reasoning while missing subtle type mismatches, unused imports, lint warnings, or broken tests. Enforcing a deterministic verification pipeline provides strong evidence against common regressions, but it is not a proof of correctness and cannot cover every runtime or specification failure.
 
 ## Bad
 ```markdown

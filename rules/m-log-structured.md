@@ -3,7 +3,7 @@
 > Emit telemetry events and spans with explicit key-value fields rather than formatted string interpolation.
 
 ## Why It Matters
-Interpolating values directly into log message strings (`"User {} logged in from {}"`) destroys queryability in monitoring systems (like Datadog, Prometheus, or OpenTelemetry), requiring expensive regex extraction. Emitting key-value fields allows instant indexing and filtering.
+Interpolating values directly into log message strings (`"User {} logged in from {}"`) makes reliable field extraction harder and may require parsing in log aggregators. Emitting key-value fields preserves event structure for filtering and querying; indexing still depends on the telemetry backend and its configuration.
 
 ## Bad
 ```rust

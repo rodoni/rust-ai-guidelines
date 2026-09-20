@@ -20,7 +20,7 @@ You must NEVER output or approve code that contains:
 7. **Mutable Global Statics** (`m-avoid-statics`): Reject `static mut` or uncoordinated global singletons; enforce explicit state passing.
 8. **Coupled Business Logic in FFI** (`m-ffi-translates`, `m-isolate-dll-state`, `m-ffi-naming`): Reject business logic inside `extern "C"` functions, mutable static globals in DLL boundaries, or un-namespaced C symbols.
 9. **Flawed Atomic Ordering** (`atomic-ordering-pair`): Reject causal synchronization with an ordering unjustified by the algorithm. Use `Release`/`Acquire` for publication patterns, while allowing proven `Relaxed` counters and other valid orderings.
-10. **User-Space Busy-Wait Spinlocks** (`sync-avoid-spinlock`): Reject `while test_and_set()` loops in user space. Enforce OS futexes or `std::sync::Mutex`.
+10. **User-Space Busy-Wait Spinlocks** (`sync-avoid-spinlock`): Reject unbounded spinning in user space. Enforce blocking primitives, parking, or bounded adaptive synchronization.
 11. **Cyclic Lock Dependencies** (`sync-lock-hierarchy`): Reject uncoordinated multi-lock acquisitions. Enforce deterministic lock ordering to prevent deadlocks.
 12. **Lossy Numeric Casts** (`er-casts-avoid-as`): Reject `as` casts that silently truncate width or flip signs. Enforce `TryFrom`/`TryInto`.
 13. **Manual State Restoration** (`er-raii-guard`): Reject manual flag resets on fallible paths. Enforce RAII guards with `Drop`.

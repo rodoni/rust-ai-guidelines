@@ -27,7 +27,7 @@ You must NEVER output or approve code that contains:
 ## 🛡️ Pre-Flight Verification Gate
 Before emitting any code, you MUST internally verify:
 - [ ] Are all types in signatures free of leaked wrappers (`Arc`, `Mutex`, `Box`)?
-- [ ] Are getter methods strictly without the `get_` prefix?
+- [ ] Do simple property getters follow the property-name convention, while lookup-style `get` methods remain clear and idiomatic?
 - [ ] Are public types deriving `Debug`, `Clone`, and `Send + Sync` (where sound)?
 - [ ] Are parameter assumptions minimized with generic bounds (`impl AsRef<Path>`) (`c-generic`)?
 - [ ] Are conversions implemented via standard traits (`From`, `TryFrom`) (`c-conv-traits`)?

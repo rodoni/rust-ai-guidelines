@@ -40,7 +40,7 @@ You must immediately flag as **FAIL** and reject any code containing:
 6. **Undiagnosed Feature Conflicts** (`m-features-additive`): Feature flags that silently disable functionality or expose mutually exclusive backends without documenting and rejecting invalid combinations.
 7. **Implicit Dependencies in Macros** (`m-macro-helpers`): Macro expansions referencing external crates not re-exported under `#[doc(hidden)] pub mod _private`.
 8. **Mutable Global State** (`m-avoid-statics`): Any `static mut` or uncoordinated global singletons.
-9. **Flawed Concurrency & Lossy Casts** (`atomic-ordering-pair`, `sync-avoid-spinlock`, `er-casts-avoid-as`): Any user-space spinlock, unjustified `SeqCst`/`Relaxed` for the algorithm's synchronization relationship, or silent lossy `as` cast.
+9. **Flawed Concurrency & Lossy Casts** (`atomic-ordering-pair`, `sync-avoid-spinlock`, `er-casts-avoid-as`): Any unbounded user-space spinlock, unjustified `SeqCst`/`Relaxed` for the algorithm's synchronization relationship, or silent lossy `as` cast.
 10. **Bypassed Verification Gates & Missing TDD** (`wf-verification-gates`, `wf-tdd-loop`): Declaring tasks complete without running `cargo check`, `cargo clippy -- -D warnings`, and `cargo test`, or adding domain features without failing-then-passing tests.
 
 ---

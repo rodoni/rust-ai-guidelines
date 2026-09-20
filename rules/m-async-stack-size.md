@@ -1,9 +1,9 @@
 # m-async-stack-size
 
-> Box large state buffers across `.await` points to avoid giant future frame sizes.
+> Measure and reduce large state held across `.await` points; boxing is one possible technique.
 
 ## Why It Matters
-When an `async fn` awaits, all local variables alive across the `.await` point become fields in the generated future struct. If an array or heavy struct is kept on the stack across `.await`, the future size balloons, multiplying memory usage across thousands of concurrent tasks.
+When an `async fn` awaits, local variables alive across the `.await` point contribute to the generated future state. Large values can increase memory usage across many concurrent tasks. Measure hot futures and consider shortening lifetimes, extracting preparation into a regular function, or boxing only when the allocation trade-off is justified.
 
 ## Bad
 ```rust

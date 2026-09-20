@@ -3,7 +3,7 @@
 > Prefer declarative `macro_rules!` (macros by example) over procedural macros when possible.
 
 ## Why It Matters
-Procedural macros require compiling a separate dylib host crate with heavy dependencies (`syn`, `quote`, `proc-macro2`), significantly increasing clean build times. `macro_rules!` compiles instantly inside the same crate.
+Procedural macros require compiling a separate host crate and often bring dependencies such as `syn`, `quote`, and `proc-macro2`, which can increase clean build times. `macro_rules!` avoids that separate proc-macro crate, although its expansion still has compilation cost.
 
 ## Bad
 ```rust
@@ -14,7 +14,7 @@ struct Point { x: i32, y: i32 }
 
 ## Good
 ```rust
-// Zero additional dependencies, instant compilation
+// No separate proc-macro crate is needed
 macro_rules! impl_point {
     ($t:ident) => {
         impl $t {
