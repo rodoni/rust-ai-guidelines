@@ -14,7 +14,9 @@ The skills are located under `.agents/skills/`:
 - `rust-guidelines`: Master rule index
 - `rust-api`: API ergonomics & naming
 - `rust-perf`: Performance & memory layout
+- `rust-concurrency`: Low-level atomics, memory ordering & synchronization
 - `rust-safety`: Unsafe invariants & panic handling
 - `rust-macros`: Declarative and proc macros
 - `rust-ffi`: Native C-ABI boundaries
 - `rust-resilience-app`: Applications, testing & AI guidelines
+- `rust-agentic-workflow`: Spec-First, TDD, atomic steps & verification gates

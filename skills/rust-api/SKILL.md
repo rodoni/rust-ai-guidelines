@@ -33,3 +33,6 @@ Focused, low-context rules for designing idiomatic, predictable, and robust Rust
 | [`c-generic`](../../rules/c-generic.md) | HIGH | Functions minimize assumptions by using generic bounds (`impl AsRef<Path>`). |
 | [`c-smart-ptr`](../../rules/c-smart-ptr.md) | HIGH | Smart pointers do not introduce inherent methods. |
 | [`m-dont-leak-types`](../../rules/m-dont-leak-types.md) | HIGH | Do not expose unexported foreign crate types in public signatures. |
+| [`er-typestate-pattern`](../../rules/er-typestate-pattern.md) | HIGH | Express lifecycle states in generic phantom types (Typestate). |
+| [`er-reexport-dependencies`](../../rules/er-reexport-dependencies.md) | HIGH | Re-export third-party types that appear in public API signatures. |
+| [`er-closure-traits`](../../rules/er-closure-traits.md) | HIGH | Accept least restrictive closure traits (`Fn` > `FnMut` > `FnOnce`). |

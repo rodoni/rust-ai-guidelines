@@ -20,3 +20,8 @@ Rules for reducing allocations, keeping cache locality, minimizing async future 
 | [`m-fast-hasher`](../../rules/m-fast-hasher.md) | HIGH | `ahash` or `foldhash` for internal HashMaps (3-5x faster). |
 | [`m-async-stack-size`](../../rules/m-async-stack-size.md) | CRITICAL | Box large buffers held across `.await` to shrink future frames. |
 | [`m-yield-points`](../../rules/m-yield-points.md) | HIGH | Insert `tokio::task::yield_now()` in CPU-bound async loops. |
+| [`sys-struct-field-ordering`](../../rules/sys-struct-field-ordering.md) | HIGH | Order struct fields largest-to-smallest to eliminate padding holes. |
+| [`sys-iterator-zero-allocation`](../../rules/sys-iterator-zero-allocation.md) | HIGH | Chain iterators lazily without intermediate heap allocations. |
+| [`sys-dispatch-tradeoff`](../../rules/sys-dispatch-tradeoff.md) | HIGH | Static dispatch in hot loops; dynamic dispatch (`dyn`) on cold paths. |
+| [`sync-cacheline-padding`](../../rules/sync-cacheline-padding.md) | HIGH | Pad hot atomic variables across threads to avoid false sharing. |
+| [`atomic-cas-weak-loops`](../../rules/atomic-cas-weak-loops.md) | HIGH | Prefer `compare_exchange_weak` in atomic retry loops. |
