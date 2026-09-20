@@ -1,9 +1,9 @@
 # sync-cacheline-padding
 
-> Pad concurrently mutated atomic variables to separate cache lines to eliminate false sharing.
+> Consider padding concurrently mutated hot variables to reduce false sharing when measurement and the target architecture justify it.
 
 ## Why It Matters
-CPUs transfer memory between cores in cache line granules (typically 64 bytes). When two adjacent atomics share the same cache line, writing to one invalidates the entire cache line across all other CPU cores, destroying multi-core scalability even when the threads access completely disjoint variables.
+CPUs transfer memory between cores in cache-line granules. When two hot atomics share a cache line, writing to one can invalidate the line for other cores, reducing scalability even when threads access disjoint variables. Cache-line size and the benefit of padding depend on the target and workload.
 
 ## Bad
 ```rust

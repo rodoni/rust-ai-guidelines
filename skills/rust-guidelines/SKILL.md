@@ -43,7 +43,7 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`unsafe-minimize-scope`](../../rules/unsafe-minimize-scope.md) - Restrict `unsafe` strictly to the single triggering operation.
 - [`m-unsound-prevention`](../../rules/m-unsound-prevention.md) - Safe public APIs wrapping `unsafe` must be 100% sound under all inputs.
 - [`m-panic-on-bug`](../../rules/m-panic-on-bug.md) - Panics are strictly for programming bugs; use `Result` for runtime fallibility.
-- [`m-errors-canonical`](../../rules/m-errors-canonical.md) - Library errors must be typed enums via `thiserror`.
+- [`m-errors-canonical`](../../rules/m-errors-canonical.md) - Library errors must be typed and inspectable; use `thiserror` when appropriate.
 - [`c-dtor-fail`](../../rules/c-dtor-fail.md) - Destructors (`Drop` trait) must never panic.
 - [`m-avoid-statics`](../../rules/m-avoid-statics.md) - Avoid mutable global statics; pass state explicitly.
 - [`m-strong-types-guard`](../../rules/m-strong-types-guard.md) - Enforce domain invariants upon type construction (*Parse, Don't Validate*).
@@ -52,9 +52,9 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 
 ### 2. Concurrency & Atomics (CRITICAL)
 - [`atomic-ordering-pair`](../../rules/atomic-ordering-pair.md) - Choose atomic orderings from the algorithm's synchronization relationship.
-- [`sync-avoid-spinlock`](../../rules/sync-avoid-spinlock.md) - Avoid busy-wait spinlocks in user space; use OS blocking locks or futexes.
-- [`sync-cacheline-padding`](../../rules/sync-cacheline-padding.md) - Pad hot atomic variables across threads to avoid false sharing.
-- [`sync-lock-hierarchy`](../../rules/sync-lock-hierarchy.md) - Enforce deterministic lock acquisition order to mathematically prevent deadlocks.
+- [`sync-avoid-spinlock`](../../rules/sync-avoid-spinlock.md) - Avoid unbounded spinning; prefer blocking or bounded adaptive synchronization.
+- [`sync-cacheline-padding`](../../rules/sync-cacheline-padding.md) - Consider padding concurrently mutated hot variables to reduce false sharing when justified.
+- [`sync-lock-hierarchy`](../../rules/sync-lock-hierarchy.md) - Enforce deterministic lock acquisition order to prevent deadlocks.
 - [`atomic-cas-weak-loops`](../../rules/atomic-cas-weak-loops.md) - Prefer `compare_exchange_weak` in atomic retry loops.
 
 ### 3. API & Ergonomics (HIGH)
@@ -85,20 +85,20 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 ### 4. Performance & Memory (HIGH)
 - [`mem-with-capacity`](../../rules/mem-with-capacity.md) - Reserve capacity when a reliable estimate makes it worthwhile.
 - [`mem-reuse-collections`](../../rules/mem-reuse-collections.md) - Clear and reuse buffers in loops to prevent allocator churn.
-- [`m-box-dst`](../../rules/m-box-dst.md) - Use `Box<[T]>` or `Box<str>` for immutable owned sequences.
+- [`m-box-dst`](../../rules/m-box-dst.md) - Consider `Box<[T]>` or `Box<str>` for frequently instantiated, immutable internal sequences.
 - [`m-shrink-to-fit`](../../rules/m-shrink-to-fit.md) - Consider shrinking long-lived collections after measuring growth patterns.
 - [`m-fast-hasher`](../../rules/m-fast-hasher.md) - Use `ahash` or `foldhash` for internal HashMaps.
-- [`m-async-stack-size`](../../rules/m-async-stack-size.md) - Box large buffers kept across `.await` points.
+- [`m-async-stack-size`](../../rules/m-async-stack-size.md) - Measure and reduce large state held across `.await`; boxing is one option.
 - [`m-yield-points`](../../rules/m-yield-points.md) - Insert cooperative yield points in CPU-bound async loops.
 - [`sys-struct-field-ordering`](../../rules/sys-struct-field-ordering.md) - Order fields deliberately in layout-sensitive performance-critical structs.
 - [`sys-iterator-zero-allocation`](../../rules/sys-iterator-zero-allocation.md) - Chain iterators lazily without intermediate heap allocations.
-- [`sys-dispatch-tradeoff`](../../rules/sys-dispatch-tradeoff.md) - Static dispatch in hot loops; dynamic dispatch (`dyn`) on cold paths.
+- [`sys-dispatch-tradeoff`](../../rules/sys-dispatch-tradeoff.md) - Weigh static and dynamic dispatch against code size, compile time, and ergonomics.
 
 ### 5. Apps, Resilience & AI (MEDIUM)
 - [`m-mimalloc-apps`](../../rules/m-mimalloc-apps.md) - Evaluate `mimalloc` when representative benchmarks justify it.
 - [`m-cargo-workspace`](../../rules/m-cargo-workspace.md) - Centralize all dependency versions under `[workspace.dependencies]`.
 - [`m-smaller-crates`](../../rules/m-smaller-crates.md) - Decompose monolithic crates into single-responsibility workspace crates.
-- [`m-app-error`](../../rules/m-app-error.md) - Use `anyhow` for top-level binaries; never in libraries.
+- [`m-app-error`](../../rules/m-app-error.md) - Aggregate errors at application boundaries; public libraries expose typed errors.
 - [`m-mockable-syscalls`](../../rules/m-mockable-syscalls.md) - Design domain logic "sans I/O" or abstract behind traits.
 - [`m-test-util`](../../rules/m-test-util.md) - Gate test fixtures and fakes behind `feature = "test-util"`.
 - [`c-failure`](../../rules/c-failure.md) - Document `# Errors`, `# Panics`, and `# Safety` when applicable.
@@ -117,7 +117,7 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 ### 7. Native FFI (SPECIALIZED)
 - [`m-ffi-translates`](../../rules/m-ffi-translates.md) - FFI crates only translate types; core logic belongs in pure Rust crates.
 - [`m-isolate-dll-state`](../../rules/m-isolate-dll-state.md) - Return opaque pointers and isolate dynamic library state.
-- [`m-ffi-naming`](../../rules/m-ffi-naming.md) - Exported C-ABI functions should follow `<crate>_<type>_<method>` naming.
+- [`m-ffi-naming`](../../rules/m-ffi-naming.md) - Exported C-ABI functions should use an explicit, collision-resistant namespace.
 
 ### 8. Agentic Workflows & Methodology (CRITICAL)
 - [`wf-spec-first`](../../rules/wf-spec-first.md) - Design types, traits, contracts, and invariants before modifying code.

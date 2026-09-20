@@ -15,6 +15,6 @@ Rules for memory ordering (`Acquire`/`Release`), lock-free synchronization, avoi
 |---|---|---|
 | [`atomic-ordering-pair`](../../rules/atomic-ordering-pair.md) | CRITICAL | Choose atomic orderings from the algorithm's synchronization relationship. |
 | [`atomic-cas-weak-loops`](../../rules/atomic-cas-weak-loops.md) | HIGH | Prefer `compare_exchange_weak` in atomic retry loops. |
-| [`sync-avoid-spinlock`](../../rules/sync-avoid-spinlock.md) | CRITICAL | Avoid busy-wait spinlocks in user space; use OS blocking locks or futexes. |
-| [`sync-cacheline-padding`](../../rules/sync-cacheline-padding.md) | HIGH | Pad hot atomic variables across threads to avoid false sharing. |
-| [`sync-lock-hierarchy`](../../rules/sync-lock-hierarchy.md) | CRITICAL | Enforce deterministic lock acquisition order to mathematically prevent deadlocks. |
+| [`sync-avoid-spinlock`](../../rules/sync-avoid-spinlock.md) | CRITICAL | Avoid unbounded spinning; prefer blocking or bounded adaptive synchronization. |
+| [`sync-cacheline-padding`](../../rules/sync-cacheline-padding.md) | HIGH | Consider padding concurrently mutated hot variables to reduce false sharing when justified. |
+| [`sync-lock-hierarchy`](../../rules/sync-lock-hierarchy.md) | CRITICAL | Enforce deterministic lock acquisition order to prevent deadlocks. |

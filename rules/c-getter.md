@@ -3,7 +3,7 @@
 > Omit the `get_` prefix on standard getter methods.
 
 ## Why It Matters
-In idiomatic Rust, getters match the property name directly. The `get` prefix is reserved exclusively for methods that can fail or return an option/sub-slice (e.g. `HashMap::get`, `slice::get`).
+In idiomatic Rust, simple property getters match the property name directly. `get` is also idiomatic for lookup-style methods and other APIs whose naming or compatibility benefits from the prefix; it is not reserved exclusively for fallible or optional results.
 
 ## Bad
 ```rust

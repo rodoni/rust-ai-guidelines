@@ -1,9 +1,9 @@
 # m-box-dst
 
-> Use `Box<[T]>` or `Box<str>` instead of `Vec<T>` or `String` for immutable owned sequences.
+> Consider `Box<[T]>` or `Box<str>` for frequently instantiated, immutable internal sequences when measurement justifies the smaller handle.
 
 ## Why It Matters
-A `Vec<T>` and `String` carry 3 words (pointer, length, capacity = 24 bytes on 64-bit). Once built and immutable, `Box<[T]>` or `Box<str>` carries only 2 words (pointer, length = 16 bytes), saving 33% stack/struct footprint per instance.
+On common 64-bit targets, a `Vec<T>` or `String` carries 3 words while a boxed slice or string carries 2 words. This can reduce the handle size for frequently instantiated internal values, but adds an allocation and may not benefit public APIs or small collections.
 
 ## Bad
 ```rust

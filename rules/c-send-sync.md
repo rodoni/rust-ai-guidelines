@@ -3,7 +3,7 @@
 > Ensure public types are `Send` and `Sync` whenever thread safety is sound.
 
 ## Why It Matters
-Types used in async runtimes (Tokio, async-std) or multi-threaded architectures require `Send + Sync` to cross task boundaries (`tokio::spawn`). A single non-Send field breaks concurrency downstream.
+Types used in async runtimes or multi-threaded architectures may need `Send` and/or `Sync` depending on how they are moved or shared. For example, a spawned Tokio future generally needs `Send + 'static`; `Sync` is required when shared references cross threads. A single non-Send field can prevent movement across threads.
 
 ## Bad
 ```rust
@@ -19,7 +19,7 @@ pub struct ServiceContext {
 ```rust
 use std::sync::Arc;
 
-// Thread-safe: implements Send + Sync automatically
+// `Arc<T>` is Send + Sync only when `T` is Send + Sync.
 pub struct ServiceContext {
     config: Arc<AppConfig>,
 }

@@ -9,7 +9,7 @@ A `Vec` may reallocate as items are pushed. A reliable capacity estimate can avo
 ```rust
 let mut items = Vec::new();
 for i in 0..10_000 {
-    items.push(i); // Triggers ~14 reallocations and copies!
+    items.push(i); // Reallocates as needed and copies existing elements
 }
 ```
 
@@ -17,7 +17,7 @@ for i in 0..10_000 {
 ```rust
 let mut items = Vec::with_capacity(10_000);
 for i in 0..10_000 {
-    items.push(i); // Exactly 1 allocation, 0 reallocations
+    items.push(i); // Avoids growth reallocations when the estimate is sufficient
 }
 ```
 

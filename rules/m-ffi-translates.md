@@ -21,18 +21,22 @@ pub fn calculate_score(data: &[u8]) -> Result<f64, ScoreError> {
     // Pure logic
 }
 
-// 2. In *-sys or *-ffi crate (purely mechanical translation)
+// 2. In an *-ffi crate that exports the C ABI (purely mechanical translation).
+// An *-sys crate conventionally imports an existing native library instead.
 /// # Safety
 /// `data_ptr` must be non-null, aligned for `u8`, and point to `len` initialized
-/// bytes readable for the duration of this call. `out` must be non-null, aligned
-/// for `f64`, and uniquely writable for the duration of this call.
+/// bytes readable for the duration of this call. `len` must not exceed
+/// `isize::MAX` and the complete range must be within one allocated object.
+/// `out` must be non-null, aligned for `f64`, and uniquely writable for the
+/// duration of this call.
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn mycrate_score_calculate(data_ptr: *const u8, len: usize, out: *mut f64) -> i32 {
-    if data_ptr.is_null() || out.is_null() {
+    if data_ptr.is_null() || out.is_null() || len > isize::MAX as usize {
         return -1; // Status code error
     }
     // SAFETY: the function contract requires a valid, aligned, initialized
-    // `len`-byte read from `data_ptr` for the duration of this call.
+    // `len`-byte read from `data_ptr`, within one allocation and no larger than
+    // `isize::MAX`, for the duration of this call.
     let slice = unsafe { std::slice::from_raw_parts(data_ptr, len) };
     match calculate_score(slice) {
         Ok(score) => {

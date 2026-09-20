@@ -3,7 +3,7 @@
 > Chain iterators lazily without intermediate heap allocations until the final consumption point.
 
 ## Why It Matters
-Calling `.collect::<Vec<_>>()` at each step in a data processing pipeline allocates and reallocates temporary heap buffers, destroys CPU L1 cache locality, and triggers allocator contention. Rust iterators are zero-cost lazy state machines; the compiler collapses chained transformations into a single unrolled loop.
+Calling `.collect::<Vec<_>>()` at each step in a data processing pipeline allocates and reallocates temporary heap buffers, destroys CPU L1 cache locality, and triggers allocator contention. Rust iterators are lazy state machines, so chaining transformations avoids intermediate collections; further fusion, vectorization, or unrolling remain compiler decisions.
 
 ## Bad
 ```rust

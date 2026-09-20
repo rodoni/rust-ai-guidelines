@@ -1,6 +1,6 @@
 # m-lint-override-expect
 
-> Use `#[expect(clippy::...)]` instead of `#[allow(clippy::...)]` for deliberate lint suppressions.
+> Prefer `#[expect(clippy::...)]` over `#[allow(clippy::...)]` for deliberate lint suppressions when the crate's MSRV supports it.
 
 ## Why It Matters
 `#[allow]` silences a lint forever, even after subsequent refactoring eliminates the triggering condition. `#[expect]` alerts you when the suppressed issue no longer occurs, preventing dead lint suppressions.

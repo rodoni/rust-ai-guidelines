@@ -10,6 +10,25 @@ When two threads acquire the same set of locks in opposing order (Thread A locks
 use std::sync::Mutex;
 
 struct Account {
+    id: u64,
+    balance: Mutex<u64>,
+}
+
+fn transfer(from: &Account, to: &Account, amount: u64) {
+    // DEADLOCK HAZARD: If two threads transfer between each other simultaneously!
+    let mut f = from.balance.lock().unwrap();
+    let mut t = to.balance.lock().unwrap();
+    *f -= amount;
+    *t += amount;
+}
+```
+
+## Good
+```rust
+use std::sync::Mutex;
+
+struct Account {
+    id: u64,
     balance: Mutex<u64>,
 }
 
@@ -27,28 +46,6 @@ fn transfer(from: &Account, to: &Account, amount: u64) -> Result<(), TransferErr
         return Err(TransferError::NonUniqueAccountIds);
     }
 
-    // DEADLOCK HAZARD: If two threads transfer between each other simultaneously!
-    let mut f = from.balance.lock().unwrap();
-    let mut t = to.balance.lock().unwrap();
-    *f -= amount;
-    *t += amount;
-    Ok(())
-}
-```
-
-The ordering key must be unique for every lock participating in the protocol. Reject
-self-transfers and duplicate keys before acquiring either lock.
-
-## Good
-```rust
-use std::sync::Mutex;
-
-struct Account {
-    id: u64,
-    balance: Mutex<u64>,
-}
-
-fn transfer(from: &Account, to: &Account, amount: u64) {
     // Acquire locks in deterministic ascending ID order
     let (first, second) = if from.id < to.id {
         (&from.balance, &to.balance)
@@ -56,8 +53,8 @@ fn transfer(from: &Account, to: &Account, amount: u64) {
         (&to.balance, &from.balance)
     };
 
-    let mut lock1 = first.lock().unwrap();
-    let mut lock2 = second.lock().unwrap();
+    let lock1 = first.lock().unwrap();
+    let lock2 = second.lock().unwrap();
 
     let (mut f, mut t) = if from.id < to.id {
         (lock1, lock2)
@@ -67,8 +64,12 @@ fn transfer(from: &Account, to: &Account, amount: u64) {
 
     *f -= amount;
     *t += amount;
+    Ok(())
 }
 ```
+
+The ordering key must be unique for every lock participating in the protocol. Reject
+self-transfers and duplicate keys before acquiring either lock.
 
 ## When Acceptable
 Systems utilizing lock-free data structures, actor message passing, or channel-based synchronization (`mpsc`/`crossbeam`) that avoid multi-lock acquisition altogether.

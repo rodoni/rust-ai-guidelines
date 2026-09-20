@@ -1,6 +1,6 @@
 # m-ffi-naming
 
-> Exported C-ABI functions should follow `<crate>_<type>_<method>` naming.
+> Exported C-ABI functions should use an explicit, collision-resistant namespace (such as `<crate>_<type>_<method>`).
 
 ## Why It Matters
 C has no namespaces. If multiple dynamic libraries or C dependencies export generic names like `create()`, `destroy()`, or `init()`, the linker encounters catastrophic symbol collisions at load time. Explicit namespacing prevents collision and clarifies foreign ownership.

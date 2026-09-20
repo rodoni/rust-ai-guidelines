@@ -3,7 +3,7 @@
 > Separate procedural macro logic into an internal implementation crate with unit tests.
 
 ## Why It Matters
-A `proc-macro = true` crate can only export procedural macro functions, making direct unit testing of AST transformations difficult. Factoring the AST generator into a separate standard library crate allows normal unit tests.
+A `proc-macro = true` crate has restrictions on its public exports, but it can still contain private helpers and unit tests. Factoring substantial AST generation into a regular internal crate can improve reuse, compile times, and test ergonomics; it is a design option rather than a requirement for testability.
 
 ## Bad
 ```rust
