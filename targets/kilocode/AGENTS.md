@@ -6,7 +6,7 @@ This project adheres to the **Rust AI Guidelines** for low-context, high-soundne
 1. **Low-Context Loading**: Reference `.kilo/rules/<rule-id>.md` only on demand. Do not dump extensive documentation into context.
 2. **Standard Traits**: Derive `Debug`, `Clone`, `Default`, `Eq`, `Hash` where sound.
 3. **Sound Boundaries**: No `unsafe` without an explicit `// SAFETY:` invariant comment.
-4. **Error Handling**: Use canonical typed enums with `thiserror` for libraries, `anyhow` only for application entrypoints/binaries.
+4. **Error Handling**: Use typed, inspectable errors for libraries, `thiserror` when appropriate, and `anyhow` only for application entrypoints/binaries.
 5. **Memory & Allocations**: Preallocate capacity (`with_capacity`) and reuse buffers (`.clear()`).
 
 ## Custom Subagents (`.kilo/agents/`)

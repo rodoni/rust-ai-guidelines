@@ -1,9 +1,9 @@
 # mem-with-capacity
 
-> Always call `with_capacity()` when the collection size is known or estimable.
+> Reserve collection capacity when a reliable estimate makes the allocation worthwhile.
 
 ## Why It Matters
-A `Vec` starts with zero capacity and reallocates geometrically (reallocating and copying elements) as items are pushed. Preallocating performs a single heap allocation.
+A `Vec` may reallocate as items are pushed. A reliable capacity estimate can avoid those reallocations, but an excessive or attacker-controlled estimate increases memory use and latency.
 
 ## Bad
 ```rust

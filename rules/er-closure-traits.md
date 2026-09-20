@@ -1,9 +1,9 @@
 # er-closure-traits
 
-> Accept the least restrictive closure trait in public APIs (`Fn` > `FnMut` > `FnOnce`) based on call frequency.
+> Accept the least restrictive closure trait required by the call pattern (`FnOnce`, `FnMut`, or `Fn`).
 
 ## Why It Matters
-A closure implementing `Fn` can also satisfy `FnMut` and `FnOnce`, but the reverse is not true. Requiring `Fn` when the function is only invoked once artificially excludes closures that capture state by unique reference (`&mut`) or by value. Conversely, taking `FnOnce` when called in a loop fails to compile.
+A closure implementing `Fn` can also satisfy `FnMut` and `FnOnce`, but the reverse is not true. Use `FnOnce` for one call, `FnMut` for repeated calls that may mutate captured state, and `Fn` for repeated non-mutating calls. Requiring a stronger bound than the call pattern needs artificially excludes valid closures.
 
 ## Bad
 ```rust

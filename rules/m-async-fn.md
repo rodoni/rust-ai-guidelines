@@ -1,6 +1,6 @@
 # m-async-fn
 
-> Use `async fn` syntax instead of manually returning `impl Future`.
+> Prefer `async fn` syntax for ordinary asynchronous functions.
 
 ## Why It Matters
 Native `async fn` is cleaner, properly preserves lifetime elision, and allows compiler tooling to optimize the generated state machine.
@@ -22,4 +22,4 @@ pub async fn fetch_data(&self, id: &str) -> Result<Data> {
 ```
 
 ## When Acceptable
-Only return explicit `Pin<Box<dyn Future>>` when recursive async functions are required or trait object safety without AFIT is needed.
+Use an explicit future type when recursion, trait object safety, MSRV compatibility, callback adaptation, combinator composition, or deliberate future boxing requires it. Document the allocation and lifetime trade-off when using `Pin<Box<dyn Future>>`.

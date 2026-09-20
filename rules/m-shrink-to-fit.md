@@ -1,9 +1,9 @@
 # m-shrink-to-fit
 
-> Call `shrink_to_fit()` on long-lived collections after construction.
+> Consider `shrink_to_fit()` for long-lived collections only after measuring their growth pattern.
 
 ## Why It Matters
-Builders often over-allocate capacity during assembly. If the resulting struct lives for the duration of the process, unused spare capacity is wasted RAM.
+Builders may over-allocate capacity during assembly, but `shrink_to_fit()` can itself reallocate and does not guarantee that the allocator returns memory to the operating system. It is counterproductive when the collection will grow again.
 
 ## Bad
 ```rust
@@ -17,7 +17,7 @@ pub struct StaticRegistry {
 ```rust
 impl StaticRegistryBuilder {
     pub fn build(mut self) -> StaticRegistry {
-        self.routes.shrink_to_fit(); // Releases spare memory back to allocator
+        self.routes.shrink_to_fit(); // Use only when the collection will remain near this size
         StaticRegistry { routes: self.routes }
     }
 }

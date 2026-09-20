@@ -11,7 +11,7 @@ When multiple host applications or plugins load a shared dynamic library, global
 static mut GLOBAL_SESSION: Option<Session> = None;
 
 #[no_mangle]
-pub extern "C" fn init_session() {
+pub extern "C" fn mycrate_session_init() {
     unsafe { GLOBAL_SESSION = Some(Session::new()); }
 }
 ```
@@ -22,15 +22,19 @@ pub extern "C" fn init_session() {
 pub struct OpaqueSession(Session);
 
 #[no_mangle]
-pub extern "C" fn session_create() -> *mut OpaqueSession {
+pub extern "C" fn mycrate_session_create() -> *mut OpaqueSession {
     let session = Box::new(OpaqueSession(Session::new()));
     Box::into_raw(session)
 }
 
+/// # Safety
+/// `ptr` must be null or a pointer previously returned by
+/// [`mycrate_session_create`] and not previously destroyed.
 #[no_mangle]
-pub unsafe extern "C" fn session_destroy(ptr: *mut OpaqueSession) {
+pub unsafe extern "C" fn mycrate_session_destroy(ptr: *mut OpaqueSession) {
     if !ptr.is_null() {
-        // SAFETY: ptr was created by session_create via Box::into_raw
+        // SAFETY: the function contract requires `ptr` to originate from
+        // `mycrate_session_create` and to be destroyed at most once.
         drop(unsafe { Box::from_raw(ptr) });
     }
 }

@@ -1,9 +1,9 @@
 # m-log-not-print
 
-> Production code uses structured telemetry (`tracing`/`log`), never `println!`, `eprintln!`, or `dbg!`.
+> Use structured telemetry for service diagnostics; reserve direct stdout/stderr for deliberate presentation output.
 
 ## Why It Matters
-`println!` and `dbg!` write unbuffered or uncoordinated text directly to standard output/error, bypass log filtering levels, cannot be ingested by structured telemetry systems, and ruin CLI applications that pipe binary or JSON output.
+`println!`, `eprintln!`, and `dbg!` bypass log filtering and structured fields when used for diagnostics. They are appropriate in a CLI presentation layer only when the output is intentional, documented, and separate from service telemetry.
 
 ## Bad
 ```rust
