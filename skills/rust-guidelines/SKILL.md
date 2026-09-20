@@ -95,18 +95,18 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`sys-dispatch-tradeoff`](../../rules/sys-dispatch-tradeoff.md) - Static dispatch in hot loops; dynamic dispatch (`dyn`) on cold paths.
 
 ### 5. Apps, Resilience & AI (MEDIUM)
-- [`m-mimalloc-apps`](../../rules/m-mimalloc-apps.md) - Configure `mimalloc` as the global allocator in application binaries.
+- [`m-mimalloc-apps`](../../rules/m-mimalloc-apps.md) - Evaluate `mimalloc` when representative benchmarks justify it.
 - [`m-cargo-workspace`](../../rules/m-cargo-workspace.md) - Centralize all dependency versions under `[workspace.dependencies]`.
 - [`m-smaller-crates`](../../rules/m-smaller-crates.md) - Decompose monolithic crates into single-responsibility workspace crates.
 - [`m-app-error`](../../rules/m-app-error.md) - Use `anyhow` for top-level binaries; never in libraries.
 - [`m-mockable-syscalls`](../../rules/m-mockable-syscalls.md) - Design domain logic "sans I/O" or abstract behind traits.
 - [`m-test-util`](../../rules/m-test-util.md) - Gate test fixtures and fakes behind `feature = "test-util"`.
-- [`c-failure`](../../rules/c-failure.md) - Mandatory `# Errors`, `# Panics`, and `# Safety` doc sections.
+- [`c-failure`](../../rules/c-failure.md) - Document `# Errors`, `# Panics`, and `# Safety` when applicable.
 - [`m-design-for-ai`](../../rules/m-design-for-ai.md) - Design code for AI comprehension: strict types and runnable doc tests.
 - [`m-lint-override-expect`](../../rules/m-lint-override-expect.md) - Use `#[expect]` over `#[allow]` to prevent zombie lints.
 - [`m-log-not-print`](../../rules/m-log-not-print.md) - Production code uses telemetry (`tracing`/`log`), never `println!` or `dbg!`.
 - [`m-log-structured`](../../rules/m-log-structured.md) - Structured telemetry with key-value fields rather than string interpolation.
-- [`m-features-additive`](../../rules/m-features-additive.md) - Cargo features must be strictly additive; never mutually exclusive.
+- [`m-features-additive`](../../rules/m-features-additive.md) - Prefer additive features; diagnose valid exclusive backend combinations.
 
 ### 6. Metaprogramming & Macros (MEDIUM)
 - [`m-macro-last-resort`](../../rules/m-macro-last-resort.md) - Treat macros as a last resort; prefer functions and traits.
@@ -117,7 +117,7 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 ### 7. Native FFI (SPECIALIZED)
 - [`m-ffi-translates`](../../rules/m-ffi-translates.md) - FFI crates only translate types; core logic belongs in pure Rust crates.
 - [`m-isolate-dll-state`](../../rules/m-isolate-dll-state.md) - Return opaque pointers and isolate dynamic library state.
-- [`m-ffi-naming`](../../rules/m-ffi-naming.md) - Exported C-ABI functions follow strict `<crate>_<type>_<method>` naming.
+- [`m-ffi-naming`](../../rules/m-ffi-naming.md) - Exported C-ABI functions should follow `<crate>_<type>_<method>` naming.
 
 ### 8. Agentic Workflows & Methodology (CRITICAL)
 - [`wf-spec-first`](../../rules/wf-spec-first.md) - Design types, traits, contracts, and invariants before modifying code.
@@ -125,4 +125,3 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`wf-verification-gates`](../../rules/wf-verification-gates.md) - Validate code via `cargo fmt`, `check`, `clippy -D warnings`, and `test`.
 - [`wf-tdd-loop`](../../rules/wf-tdd-loop.md) - Write failing tests before implementing features or fixes (Red-Green-Refactor).
 - [`wf-debug-systematic`](../../rules/wf-debug-systematic.md) - Isolate bugs through minimal reproduction and evidence; never guess randomly.
-

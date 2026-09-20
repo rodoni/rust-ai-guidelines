@@ -1,9 +1,9 @@
 # c-sealed
 
-> Use the sealed trait pattern to prevent downstream external implementations.
+> Seal public traits only when the crate must control their implementations.
 
 ## Why It Matters
-Public traits that downstream crates implement cannot have new methods added in minor releases without breaking semver. Sealing prevents downstream implementations while exposing the trait for generic bounds.
+Public traits that downstream crates implement cannot have new required methods added in minor releases without breaking semver. Sealing prevents downstream implementations while exposing the trait for generic bounds, but it also prevents external mocks, plugins, and legitimate integrations.
 
 ## Bad
 ```rust

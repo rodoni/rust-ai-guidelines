@@ -1,26 +1,34 @@
 # atomic-ordering-pair
  
-> Synchronize inter-thread state using matching `Release` stores and `Acquire` loads; avoid lazy `SeqCst` and unjustified `Relaxed`.
+> Choose atomic orderings from the algorithm's synchronization relationship; avoid unjustified `Relaxed` and `SeqCst`.
 
 ## Why It Matters
-Atomic operations establish causal memory relationships across threads. Using `Ordering::SeqCst` everywhere incurs unnecessary memory barrier penalties on weakly ordered architectures (ARM, RISC-V). Conversely, using `Ordering::Relaxed` across threads without formal proof of independence causes subtle memory reordering bugs and data races.
+Atomic operations establish causal memory relationships across threads. `Release`/`Acquire` is a common publication pattern, but RMW operations, release sequences, locks, semaphores, and counters may require different orderings. `Relaxed` is valid only when no other memory access depends on that operation; `SeqCst` should be chosen deliberately rather than mechanically.
 
 ## Bad
 ```rust
 use std::sync::atomic::{AtomicBool, Ordering};
 
-static READY: AtomicBool = AtomicBool::new(false);
-static mut DATA: u64 = 0;
+struct Shared {
+    ready: AtomicBool,
+    data: std::sync::atomic::AtomicU64,
+}
+
+// Assume `shared` is safely shared between the two threads.
+let shared = Shared {
+    ready: AtomicBool::new(false),
+    data: std::sync::atomic::AtomicU64::new(0),
+};
 
 // Thread 1: Writer
-unsafe { DATA = 42; }
+shared.data.store(42, Ordering::Relaxed);
 // BUG: Relaxed allows the write to DATA to be reordered AFTER the flag!
-READY.store(true, Ordering::Relaxed);
+shared.ready.store(true, Ordering::Relaxed);
 
 // Thread 2: Reader
-if READY.load(Ordering::Relaxed) {
-    // DATA read may see uninitialized or stale data!
-    let val = unsafe { DATA };
+if shared.ready.load(Ordering::Relaxed) {
+    // The flag does not publish the preceding data store.
+    let val = shared.data.load(Ordering::Relaxed);
 }
 ```
 
@@ -28,19 +36,21 @@ if READY.load(Ordering::Relaxed) {
 ```rust
 use std::sync::atomic::{AtomicBool, Ordering};
 
-static READY: AtomicBool = AtomicBool::new(false);
-static mut DATA: u64 = 0;
+let shared = Shared {
+    ready: AtomicBool::new(false),
+    data: std::sync::atomic::AtomicU64::new(0),
+};
 
 // Thread 1: Release ensures all prior writes are visible to Acquire
-unsafe { DATA = 42; }
-READY.store(true, Ordering::Release);
+shared.data.store(42, Ordering::Relaxed);
+shared.ready.store(true, Ordering::Release);
 
 // Thread 2: Acquire synchronizes with Release, establishing happens-before
-if READY.load(Ordering::Acquire) {
-    let val = unsafe { DATA };
+if shared.ready.load(Ordering::Acquire) {
+    let val = shared.data.load(Ordering::Relaxed);
     assert_eq!(val, 42);
 }
 ```
 
 ## When Acceptable
-`Ordering::Relaxed` is strictly acceptable for monotonic counters (e.g., metric counters, IDs) where no other memory operations depend on its ordering.
+`Ordering::Relaxed` is acceptable for independent monotonic counters or values when the algorithm proves that no other memory operation depends on their ordering.

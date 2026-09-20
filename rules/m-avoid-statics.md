@@ -1,9 +1,9 @@
 # m-avoid-statics
 
-> Avoid mutable or complex global statics; pass state explicitly or via dependency injection.
+> Avoid mutable or complex global state; pass state explicitly or via dependency injection.
 
 ## Why It Matters
-Global statics (`static mut`, `OnceLock`, or `lazy_static`) create hidden coupling between components, make unit tests nondeterministic and order-dependent when run in parallel, and complicate initialization order in multi-threaded programs.
+Mutable globals, process-wide caches, and singletons create hidden coupling between components, make unit tests nondeterministic and order-dependent when run in parallel, and complicate initialization order. Immutable constants and immutable data initialized once with a documented lifetime (for example, `OnceLock<T>`) can be appropriate when dependency injection is impractical.
 
 ## Bad
 ```rust

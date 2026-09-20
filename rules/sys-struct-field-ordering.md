@@ -27,8 +27,8 @@ pub struct PacketHeader {
     pub flag: u8,          // 1 byte + 6 bytes trailing padding
 } // Total: 24 bytes (saved 25% memory per element in a Vec!)
 
-// Tip: In pure Rust (default representation), rustc reorders fields automatically,
-// but explicit ordering guarantees predictable cache lines in FFI and zero-copy structs.
+// Tip: For `repr(C)` and other layout-sensitive structs, explicit ordering
+// documents the intended layout. `repr(Rust)` does not promise stable field order.
 ```
 
 ## When Acceptable

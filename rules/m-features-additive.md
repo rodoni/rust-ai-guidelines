@@ -1,22 +1,25 @@
 # m-features-additive
 
-> Cargo features must be strictly additive; enabling a feature must never disable functionality or break code.
+> Prefer additive Cargo features; make mutually exclusive features explicit and diagnosable.
 
 ## Why It Matters
-Cargo unifies features across the entire dependency graph. If crate A enables feature `foo` and crate B does not, Cargo builds your crate with `foo` enabled for both. If enabling a feature mutates public API signatures or disables code, it will unpredictably break other crates in the dependency tree.
+Cargo unifies features across the dependency graph. Features should normally add capabilities without changing existing APIs or silently disabling code. A crate with genuinely exclusive backends may use mutually exclusive features, but must document the constraint and reject invalid combinations clearly.
 
 ## Bad
 ```toml
 # In Cargo.toml
 [features]
-# Anti-pattern: mutually exclusive features!
+# Anti-pattern: mutually exclusive features with no documented constraint!
 backend-a = []
 backend-b = [] # Mutually exclusive with backend-a
 ```
 ```rust
-// Code compiles ONLY if exactly one feature is chosen:
-#[cfg(all(feature = "backend-a", feature = "backend-b"))]
-compile_error!("Features backend-a and backend-b cannot be used together!");
+// Without a diagnostic, the invalid combination fails ambiguously or changes APIs.
+#[cfg(feature = "backend-a")]
+pub use backend_a::Client;
+
+#[cfg(feature = "backend-b")]
+pub use backend_b::Client;
 ```
 
 ## Good

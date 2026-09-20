@@ -102,7 +102,7 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Metodologia Agêntica** | [`wf-debug-systematic`](rules/wf-debug-systematic.md) | Tweag Core Workflows | Investigate and resolve bugs through minimal reproduction and evidence-based hypotheses. |
 | **Segurança & Soundness** | [`c-dtor-fail`](rules/c-dtor-fail.md) | Rust API Guidelines | Destructors (`Drop` trait implementations) must never panic or fail. |
 | **Segurança & Soundness** | [`m-avoid-statics`](rules/m-avoid-statics.md) | Microsoft Pragmatic Rust | Avoid mutable or complex global statics; pass state explicitly or via dependency injection. |
-| **Segurança & Soundness** | [`m-errors-canonical`](rules/m-errors-canonical.md) | Microsoft Pragmatic Rust | Library error types must be strongly typed canonical enums using `thiserror`. |
+| **Segurança & Soundness** | [`m-errors-canonical`](rules/m-errors-canonical.md) | Microsoft Pragmatic Rust | Library errors must be typed and inspectable; use `thiserror` when appropriate. |
 | **Segurança & Soundness** | [`m-panic-on-bug`](rules/m-panic-on-bug.md) | Microsoft Pragmatic Rust | Panics are exclusively for impossible invariants and programming bugs; use `Result` for runtime failures. |
 | **Segurança & Soundness** | [`m-strong-types-guard`](rules/m-strong-types-guard.md) | Microsoft Pragmatic Rust | Enforce domain invariants upon type construction (*Parse, Don't Validate*). |
 | **Segurança & Soundness** | [`m-unsound-prevention`](rules/m-unsound-prevention.md) | Microsoft Pragmatic Rust | Public safe APIs wrapping `unsafe` internals must be 100% sound under all possible inputs. |
@@ -141,10 +141,10 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Performance & Memória** | [`m-async-stack-size`](rules/m-async-stack-size.md) | Microsoft Pragmatic Rust | Box large state buffers across `.await` points to avoid giant future frame sizes. |
 | **Performance & Memória** | [`m-box-dst`](rules/m-box-dst.md) | Microsoft Pragmatic Rust | Use `Box<[T]>` or `Box<str>` instead of `Vec<T>` or `String` for immutable owned sequences. |
 | **Performance & Memória** | [`m-fast-hasher`](rules/m-fast-hasher.md) | Microsoft Pragmatic Rust | Use a fast non-cryptographic hasher (`ahash` or `foldhash`) for internal HashMaps. |
-| **Performance & Memória** | [`m-shrink-to-fit`](rules/m-shrink-to-fit.md) | Microsoft Pragmatic Rust | Call `shrink_to_fit()` on long-lived collections after construction. |
+| **Performance & Memória** | [`m-shrink-to-fit`](rules/m-shrink-to-fit.md) | Microsoft Pragmatic Rust | Consider `shrink_to_fit()` after measuring long-lived collection growth. |
 | **Performance & Memória** | [`m-yield-points`](rules/m-yield-points.md) | Microsoft Pragmatic Rust | Insert cooperative yield points in long-running CPU-bound loops in async tasks. |
 | **Performance & Memória** | [`mem-reuse-collections`](rules/mem-reuse-collections.md) | Pragmatic / Soundness | Clear and reuse existing buffer allocations across iterations instead of allocating new ones. |
-| **Performance & Memória** | [`mem-with-capacity`](rules/mem-with-capacity.md) | Pragmatic / Soundness | Always call `with_capacity()` when the collection size is known or estimable. |
+| **Performance & Memória** | [`mem-with-capacity`](rules/mem-with-capacity.md) | Pragmatic / Soundness | Reserve capacity when a reliable estimate makes it worthwhile. |
 | **Performance & Memória** | [`sys-struct-field-ordering`](rules/sys-struct-field-ordering.md) | Programming Rust | Order struct fields from largest alignment to smallest to eliminate padding holes. |
 | **Performance & Memória** | [`sys-iterator-zero-allocation`](rules/sys-iterator-zero-allocation.md) | Programming Rust | Chain iterators lazily without intermediate heap allocations until the final consumption point. |
 | **Performance & Memória** | [`sys-dispatch-tradeoff`](rules/sys-dispatch-tradeoff.md) | Programming Rust / Effective | Use static dispatch in hot loops; dynamic dispatch (`dyn`) on cold paths to curtail binary bloat. |
@@ -152,11 +152,11 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Apps, Resiliência & AI** | [`m-app-error`](rules/m-app-error.md) | Microsoft Pragmatic Rust | Use `anyhow` for top-level application binary error handling, but never in library crates. |
 | **Apps, Resiliência & AI** | [`m-cargo-workspace`](rules/m-cargo-workspace.md) | Microsoft Pragmatic Rust | Centralize all dependency versions under `[workspace.dependencies]` at the workspace root. |
 | **Apps, Resiliência & AI** | [`m-design-for-ai`](rules/m-design-for-ai.md) | Microsoft Pragmatic Rust | Design APIs and modules for AI comprehension: idiomatic patterns, strong types, and testable examples. |
-| **Apps, Resiliência & AI** | [`m-features-additive`](rules/m-features-additive.md) | Microsoft Pragmatic Rust | Cargo features must be strictly additive; enabling a feature must never disable functionality or break code. |
+| **Apps, Resiliência & AI** | [`m-features-additive`](rules/m-features-additive.md) | Microsoft Pragmatic Rust | Prefer additive features; make exclusive backends explicit and diagnosable. |
 | **Apps, Resiliência & AI** | [`m-lint-override-expect`](rules/m-lint-override-expect.md) | Microsoft Pragmatic Rust | Use `#[expect(clippy::...)]` instead of `#[allow(clippy::...)]` for deliberate lint suppressions. |
 | **Apps, Resiliência & AI** | [`m-log-not-print`](rules/m-log-not-print.md) | Microsoft Pragmatic Rust | Production code uses structured telemetry (`tracing`/`log`), never `println!`, `eprintln!`, or `dbg!`. |
 | **Apps, Resiliência & AI** | [`m-log-structured`](rules/m-log-structured.md) | Microsoft Pragmatic Rust | Emit telemetry events and spans with explicit key-value fields rather than formatted string interpolation. |
-| **Apps, Resiliência & AI** | [`m-mimalloc-apps`](rules/m-mimalloc-apps.md) | Microsoft Pragmatic Rust | Configure `mimalloc` as the global memory allocator in application binaries. |
+| **Apps, Resiliência & AI** | [`m-mimalloc-apps`](rules/m-mimalloc-apps.md) | Microsoft Pragmatic Rust | Evaluate `mimalloc` in application binaries when benchmarks justify it. |
 | **Apps, Resiliência & AI** | [`m-mockable-syscalls`](rules/m-mockable-syscalls.md) | Microsoft Pragmatic Rust | Design core domain logic "sans I/O" or abstract system calls behind mockable traits. |
 | **Apps, Resiliência & AI** | [`m-smaller-crates`](rules/m-smaller-crates.md) | Microsoft Pragmatic Rust | Decompose monolithic crates into smaller, single-responsibility workspace crates. |
 | **Apps, Resiliência & AI** | [`m-test-util`](rules/m-test-util.md) | Microsoft Pragmatic Rust | Gate test fixtures, fakes, and harness utilities behind `feature = "test-util"`. |
@@ -164,7 +164,7 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Metaprogramação & Macros** | [`m-macro-helpers`](rules/m-macro-helpers.md) | Microsoft Pragmatic Rust | Re-export external third-party dependencies used in macro expansion under `#[doc(hidden)] pub mod _private`. |
 | **Metaprogramação & Macros** | [`m-macro-last-resort`](rules/m-macro-last-resort.md) | Microsoft Pragmatic Rust | Treat macros as a tool of last resort; prefer functions, traits, and generics. |
 | **Metaprogramação & Macros** | [`m-proc-impl`](rules/m-proc-impl.md) | Microsoft Pragmatic Rust | Separate procedural macro logic into an internal implementation crate with unit tests. |
-| **Native FFI** | [`m-ffi-naming`](rules/m-ffi-naming.md) | Microsoft Pragmatic Rust | Exported C-ABI functions must follow the strict `<crate>_<type>_<method>` naming convention. |
+| **Native FFI** | [`m-ffi-naming`](rules/m-ffi-naming.md) | Microsoft Pragmatic Rust | Exported C-ABI functions should follow `<crate>_<type>_<method>` naming. |
 | **Native FFI** | [`m-ffi-translates`](rules/m-ffi-translates.md) | Microsoft Pragmatic Rust | FFI crates must only translate types and calls; business logic belongs in pure Rust core crates. |
 | **Native FFI** | [`m-isolate-dll-state`](rules/m-isolate-dll-state.md) | Microsoft Pragmatic Rust | Isolate global runtime state when exposing Rust libraries as dynamic libraries (DLLs/so/dylib). |
 

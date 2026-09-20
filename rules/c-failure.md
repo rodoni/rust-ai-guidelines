@@ -1,9 +1,9 @@
 # c-failure
 
-> Public API documentation must contain explicit `# Errors`, `# Panics`, and `# Safety` sections.
+> Document fallibility and safety contracts explicitly in public APIs.
 
 ## Why It Matters
-Contractual expectations must be clear. Missing `# Panics` or `# Safety` sections causes callers and AI coding agents to make incorrect assumptions regarding error handling or preconditions.
+Contractual expectations must be clear. Add `# Errors` when an API returns a recoverable error, `# Panics` when it can panic, and `# Safety` only for `unsafe` APIs.
 
 ## Bad
 ```rust
@@ -20,9 +20,6 @@ pub fn read_int(path: &Path) -> Result<i32, IoError> { ... }
 /// or the file contains fewer than 4 bytes.
 ///
 /// # Panics
-/// Panics if `path` is an empty string.
-///
-/// # Safety
-/// (If unsafe fn) Specifies caller-upheld memory preconditions.
+/// Never panics for valid `Path` values.
 pub fn read_int(path: &Path) -> Result<i32, IoError> { ... }
 ```

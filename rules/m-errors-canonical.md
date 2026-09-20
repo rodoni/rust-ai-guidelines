@@ -1,9 +1,9 @@
 # m-errors-canonical
 
-> Library error types must be strongly typed canonical enums using `thiserror`.
+> Library errors must be typed and inspectable; use `thiserror` when it fits the crate.
 
 ## Why It Matters
-Returning `String`, `Box<dyn Error>`, or `anyhow::Error` from library code prevents callers from inspecting, matching, or programmatically recovering from specific error cases.
+Returning only `String`, `Box<dyn Error>`, or `anyhow::Error` from library code prevents callers from reliably inspecting, matching, or recovering from specific error cases. A typed enum, struct, or newtype is appropriate; `thiserror` is a convenient implementation when compatible with the crate's goals, including `no_std` constraints.
 
 ## Bad
 ```rust
