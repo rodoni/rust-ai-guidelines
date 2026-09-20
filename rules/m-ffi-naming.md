@@ -5,23 +5,26 @@
 ## Why It Matters
 C has no namespaces. If multiple dynamic libraries or C dependencies export generic names like `create()`, `destroy()`, or `init()`, the linker encounters catastrophic symbol collisions at load time. Explicit namespacing prevents collision and clarifies foreign ownership.
 
+The examples use the Rust 2024 form `#[unsafe(no_mangle)]`; older editions may
+accept `#[no_mangle]` without the explicit unsafe attribute.
+
 ## Bad
 ```rust
 // Global namespace collision waiting to happen:
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn init() { ... }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn process_buffer(buf: *const u8, len: usize) -> i32 { ... }
 ```
 
 ## Good
 ```rust
 // Prefixed with crate, domain type, and operation:
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn mycrate_engine_init() { ... }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn mycrate_parser_process_buffer(buf: *const u8, len: usize) -> i32 { ... }
 ```
 

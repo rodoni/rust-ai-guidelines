@@ -22,7 +22,7 @@ Focused, low-context rules for designing idiomatic, predictable, and robust Rust
 | [`c-sealed`](../../rules/c-sealed.md) | MEDIUM | Use sealed traits to protect public traits from semver breaks. |
 | [`m-weasel-words`](../../rules/m-weasel-words.md) | MEDIUM | Eliminate vague words (`Helper`, `Manager`, `Data`). |
 | [`m-regular-fn`](../../rules/m-regular-fn.md) | MEDIUM | Prefer standalone module functions over empty utility structs. |
-| [`m-avoid-wrappers`](../../rules/m-avoid-wrappers.md) | HIGH | Never leak `Arc`/`Mutex`/`Box` in public signatures. |
+| [`m-avoid-wrappers`](../../rules/m-avoid-wrappers.md) | HIGH | Avoid implementation-detail wrappers unless ownership or dynamic dispatch requires them. |
 | [`m-di-hierarchy`](../../rules/m-di-hierarchy.md) | HIGH | Concrete types > Generics with bounds > `dyn Trait`. |
 | [`m-init-builder`](../../rules/m-init-builder.md) | HIGH | Builder pattern with fallible `.build()` for complex types. |
 | [`m-services-clone`](../../rules/m-services-clone.md) | HIGH | Services and client handles are cheaply `Clone` via `Arc`. |

@@ -15,5 +15,5 @@ Focused rules for interfacing safely between Rust and C/C++ or external native r
 |---|---|---|
 | [`m-ffi-translates`](../../rules/m-ffi-translates.md) | CRITICAL | FFI crates only translate types; core logic remains in pure Rust crates. |
 | [`m-isolate-dll-state`](../../rules/m-isolate-dll-state.md) | HIGH | Return opaque boxed pointers; never use shared mutable global statics in DLLs. |
-| [`m-ffi-naming`](../../rules/m-ffi-naming.md) | HIGH | Exported C-ABI functions follow strict `<crate>_<type>_<method>` naming. |
+| [`m-ffi-naming`](../../rules/m-ffi-naming.md) | HIGH | Exported C-ABI functions should follow `<crate>_<type>_<method>` naming. |
 | [`unsafe-safety-comment`](../../rules/unsafe-safety-comment.md) | CRITICAL | Mandatory `// SAFETY:` explaining raw pointer validity and alignment. |

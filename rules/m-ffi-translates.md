@@ -8,7 +8,7 @@ Mixing business logic into C-ABI FFI wrapper functions prevents code reuse by na
 ## Bad
 ```rust
 // Business logic coupled directly to raw C-ABI pointers
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn mycrate_score_calculate(data_ptr: *const u8, len: usize) -> f64 {
     // 50 lines of complex parsing and mathematical calculations...
 }
@@ -26,7 +26,7 @@ pub fn calculate_score(data: &[u8]) -> Result<f64, ScoreError> {
 /// `data_ptr` must be non-null, aligned for `u8`, and point to `len` initialized
 /// bytes readable for the duration of this call. `out` must be non-null, aligned
 /// for `f64`, and uniquely writable for the duration of this call.
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn mycrate_score_calculate(data_ptr: *const u8, len: usize, out: *mut f64) -> i32 {
     if data_ptr.is_null() || out.is_null() {
         return -1; // Status code error

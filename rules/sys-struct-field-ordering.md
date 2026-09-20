@@ -1,6 +1,6 @@
 # sys-struct-field-ordering
 
-> Order struct fields from largest alignment to smallest in performance-critical types to eliminate padding holes.
+> In layout-sensitive performance-critical structs, order fields from largest alignment to smallest when the representation makes ordering meaningful.
 
 ## Why It Matters
 Hardware alignment requires values of size $N$ to reside at memory addresses divisible by $N$. In unoptimized or `#[repr(C)]` layouts, interleaving 1-byte booleans with 8-byte pointers creates up to 7 bytes of dead padding per field, inflating cache footprint and degrading memory bandwidth in large collections.

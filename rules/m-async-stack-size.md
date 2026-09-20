@@ -18,7 +18,7 @@ async fn process_chunk() {
 ```rust
 async fn process_chunk() {
     let buffer = vec![0u8; 64 * 1024].into_boxed_slice(); // Heap-allocated
-    tokio::time::sleep(Duration::from_millis(10)).await; // Future is only ~16 bytes
+    tokio::time::sleep(Duration::from_millis(10)).await; // The buffer stays on the heap
     send(&buffer).await;
 }
 ```

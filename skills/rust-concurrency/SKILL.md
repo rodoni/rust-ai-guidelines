@@ -13,7 +13,7 @@ Rules for memory ordering (`Acquire`/`Release`), lock-free synchronization, avoi
 
 | Rule | Impact | Summary |
 |---|---|---|
-| [`atomic-ordering-pair`](../../rules/atomic-ordering-pair.md) | CRITICAL | Pair `Release` stores with `Acquire` loads; avoid unjustified `Relaxed` or `SeqCst`. |
+| [`atomic-ordering-pair`](../../rules/atomic-ordering-pair.md) | CRITICAL | Choose atomic orderings from the algorithm's synchronization relationship. |
 | [`atomic-cas-weak-loops`](../../rules/atomic-cas-weak-loops.md) | HIGH | Prefer `compare_exchange_weak` in atomic retry loops. |
 | [`sync-avoid-spinlock`](../../rules/sync-avoid-spinlock.md) | CRITICAL | Avoid busy-wait spinlocks in user space; use OS blocking locks or futexes. |
 | [`sync-cacheline-padding`](../../rules/sync-cacheline-padding.md) | HIGH | Pad hot atomic variables across threads to avoid false sharing. |

@@ -51,7 +51,7 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`er-raii-guard`](../../rules/er-raii-guard.md) - Encapsulate state cleanup and resource release into RAII guards (`Drop`).
 
 ### 2. Concurrency & Atomics (CRITICAL)
-- [`atomic-ordering-pair`](../../rules/atomic-ordering-pair.md) - Pair `Release` stores with `Acquire` loads; avoid unjustified `Relaxed` or `SeqCst`.
+- [`atomic-ordering-pair`](../../rules/atomic-ordering-pair.md) - Choose atomic orderings from the algorithm's synchronization relationship.
 - [`sync-avoid-spinlock`](../../rules/sync-avoid-spinlock.md) - Avoid busy-wait spinlocks in user space; use OS blocking locks or futexes.
 - [`sync-cacheline-padding`](../../rules/sync-cacheline-padding.md) - Pad hot atomic variables across threads to avoid false sharing.
 - [`sync-lock-hierarchy`](../../rules/sync-lock-hierarchy.md) - Enforce deterministic lock acquisition order to mathematically prevent deadlocks.
@@ -67,7 +67,7 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`c-sealed`](../../rules/c-sealed.md) - Use the sealed trait pattern to protect public traits from semver breaks.
 - [`m-weasel-words`](../../rules/m-weasel-words.md) - Eliminate vague names (`Helper`, `Manager`, `Data`, `Info`).
 - [`m-regular-fn`](../../rules/m-regular-fn.md) - Prefer module functions over empty utility structs.
-- [`m-avoid-wrappers`](../../rules/m-avoid-wrappers.md) - Never expose `Arc`/`Mutex`/`Box` in public signatures.
+- [`m-avoid-wrappers`](../../rules/m-avoid-wrappers.md) - Avoid implementation-detail wrappers; allow them when ownership or dynamic dispatch requires it.
 - [`m-di-hierarchy`](../../rules/m-di-hierarchy.md) - Concrete types > Generics with bounds > `dyn Trait`.
 - [`m-init-builder`](../../rules/m-init-builder.md) - Use the Builder pattern with fallible `.build()` for complex structs.
 - [`m-services-clone`](../../rules/m-services-clone.md) - Service/client structs implement cheap `Clone` via internal `Arc`.
@@ -80,17 +80,17 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`m-dont-leak-types`](../../rules/m-dont-leak-types.md) - Do not expose unexported foreign crate types in public signatures.
 - [`er-typestate-pattern`](../../rules/er-typestate-pattern.md) - Express lifecycle states in generic phantom types (Typestate).
 - [`er-reexport-dependencies`](../../rules/er-reexport-dependencies.md) - Re-export third-party types that appear in public API signatures.
-- [`er-closure-traits`](../../rules/er-closure-traits.md) - Accept least restrictive closure traits (`Fn` > `FnMut` > `FnOnce`).
+- [`er-closure-traits`](../../rules/er-closure-traits.md) - Accept the least restrictive closure trait required by the call pattern.
 
 ### 4. Performance & Memory (HIGH)
-- [`mem-with-capacity`](../../rules/mem-with-capacity.md) - Always preallocate collection capacity when size is known.
+- [`mem-with-capacity`](../../rules/mem-with-capacity.md) - Reserve capacity when a reliable estimate makes it worthwhile.
 - [`mem-reuse-collections`](../../rules/mem-reuse-collections.md) - Clear and reuse buffers in loops to prevent allocator churn.
 - [`m-box-dst`](../../rules/m-box-dst.md) - Use `Box<[T]>` or `Box<str>` for immutable owned sequences.
-- [`m-shrink-to-fit`](../../rules/m-shrink-to-fit.md) - Shrink collections after assembly in long-lived structs.
+- [`m-shrink-to-fit`](../../rules/m-shrink-to-fit.md) - Consider shrinking long-lived collections after measuring growth patterns.
 - [`m-fast-hasher`](../../rules/m-fast-hasher.md) - Use `ahash` or `foldhash` for internal HashMaps.
 - [`m-async-stack-size`](../../rules/m-async-stack-size.md) - Box large buffers kept across `.await` points.
 - [`m-yield-points`](../../rules/m-yield-points.md) - Insert cooperative yield points in CPU-bound async loops.
-- [`sys-struct-field-ordering`](../../rules/sys-struct-field-ordering.md) - Order struct fields largest-to-smallest to eliminate padding holes.
+- [`sys-struct-field-ordering`](../../rules/sys-struct-field-ordering.md) - Order fields deliberately in layout-sensitive performance-critical structs.
 - [`sys-iterator-zero-allocation`](../../rules/sys-iterator-zero-allocation.md) - Chain iterators lazily without intermediate heap allocations.
 - [`sys-dispatch-tradeoff`](../../rules/sys-dispatch-tradeoff.md) - Static dispatch in hot loops; dynamic dispatch (`dyn`) on cold paths.
 
@@ -104,7 +104,7 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`c-failure`](../../rules/c-failure.md) - Document `# Errors`, `# Panics`, and `# Safety` when applicable.
 - [`m-design-for-ai`](../../rules/m-design-for-ai.md) - Design code for AI comprehension: strict types and runnable doc tests.
 - [`m-lint-override-expect`](../../rules/m-lint-override-expect.md) - Use `#[expect]` over `#[allow]` to prevent zombie lints.
-- [`m-log-not-print`](../../rules/m-log-not-print.md) - Production code uses telemetry (`tracing`/`log`), never `println!` or `dbg!`.
+- [`m-log-not-print`](../../rules/m-log-not-print.md) - Use telemetry for diagnostics; reserve stdout/stderr for deliberate presentation output.
 - [`m-log-structured`](../../rules/m-log-structured.md) - Structured telemetry with key-value fields rather than string interpolation.
 - [`m-features-additive`](../../rules/m-features-additive.md) - Prefer additive features; diagnose valid exclusive backend combinations.
 
