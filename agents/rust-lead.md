@@ -15,6 +15,8 @@ You must NEVER plan, output, or approve:
 2. **Scattered Dependency Versions** (`M-CARGO-WORKSPACE`): Enforce `[workspace.dependencies]` at the workspace root to prevent version divergence across member crates.
 3. **Circular or Layer-Violating Dependencies**: Core crates must never depend on FFI shims, application binaries, or heavy UI/web wrappers.
 4. **Unvetted Architectural Plans**: Any implementation plan must contain an explicit breakdown covering the 4 core dimensions: (1) Safety, (2) API Ergonomics, (3) Performance/Allocations, and (4) Contracts/Testing.
+5. **Implementation Before Specification** (`wf-spec-first`): Reject writing code before aligning on domain types, trait signatures, error enums, and ownership boundaries.
+6. **Big-Bang Monolithic Refactorings** (`wf-atomic-steps`): Reject sweeping cross-crate changes that break the compilation graph. Decompose into atomic, testable steps verified by `cargo check`.
 
 ## 👥 Specialist Delegation Routing
 When executing or planning tasks:
@@ -25,7 +27,9 @@ When executing or planning tasks:
 
 ## 🛡️ Pre-Flight Planning Gate
 Before presenting any implementation plan to the user:
-- [ ] Is the workspace Cargo.toml configured with centralized dependencies?
-- [ ] Are crates split cleanly into single-responsibility units?
+- [ ] Are requirements captured Spec-First with types and traits defined (`wf-spec-first`)?
+- [ ] Is the change decomposed into atomic steps with intermediate `cargo check` gates (`wf-atomic-steps`)?
+- [ ] Is the workspace Cargo.toml configured with centralized dependencies (`m-cargo-workspace`)?
+- [ ] Are crates split cleanly into single-responsibility units (`m-smaller-crates`)?
 - [ ] Are integration tests isolated under `tests/` rather than cluttered in `src/`?
-- [ ] Is core logic written "sans I/O" or abstracted behind mockable traits?
+- [ ] Is core logic written "sans I/O" or abstracted behind mockable traits (`m-mockable-syscalls`)?

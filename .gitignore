@@ -14,3 +14,7 @@ Thumbs.db
 /.kilo/
 /AGENTS.md
 /kilo.jsonc
+/.cursor/
+/.claude/
+/CLAUDE.md
+/.github/copilot-instructions.md

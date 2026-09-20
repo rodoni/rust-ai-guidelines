@@ -21,10 +21,11 @@ Follow these non-negotiable review execution principles:
    - If a single line or function violates multiple rules, emit a separate finding for each violated rule.
 2. **No Early Exit**: Never stop reviewing after discovering the first failure or failing a gate. Review all files, functions, and lines completely.
 3. **Multi-Pass Systematic Inspection Protocol**: You must systematically audit the code using 4 distinct passes:
-   - **Pass 1: Safety & Soundness** (`unsafe-safety-comment`, `unsafe-minimize-scope`, `m-unsound-prevention`, `m-panic-on-bug`, `c-dtor-fail`, `m-avoid-statics`)
-   - **Pass 2: Documentation & API Contracts** (`c-failure`, `m-design-for-ai`, `m-errors-canonical`, `m-dont-leak-types`)
+   - **Pass 1: Safety, Soundness & Concurrency** (`unsafe-safety-comment`, `unsafe-minimize-scope`, `m-unsound-prevention`, `m-panic-on-bug`, `c-dtor-fail`, `m-avoid-statics`, `atomic-ordering-pair`, `sync-avoid-spinlock`, `sync-lock-hierarchy`, `er-casts-avoid-as`, `er-raii-guard`)
+   - **Pass 2: Documentation, Types & API Contracts** (`c-failure`, `m-design-for-ai`, `m-errors-canonical`, `m-dont-leak-types`, `er-typestate-pattern`, `er-reexport-dependencies`, `er-closure-traits`)
    - **Pass 3: Lint & Telemetry Hygiene** (`m-lint-override-expect`, `m-log-not-print`, `m-log-structured`, `m-features-additive`, `m-macro-helpers`)
-   - **Pass 4: Performance, Memory & Ergonomics** (`mem-with-capacity`, `mem-reuse-collections`, `m-box-dst`, `m-fast-hasher`, `m-shrink-to-fit`, `c-getter`, `c-newtype`, `c-common-traits`, `m-avoid-wrappers`)
+   - **Pass 4: Performance, Memory & Hardware Layout** (`mem-with-capacity`, `mem-reuse-collections`, `m-box-dst`, `m-fast-hasher`, `m-shrink-to-fit`, `c-getter`, `c-newtype`, `c-common-traits`, `m-avoid-wrappers`, `sync-cacheline-padding`, `atomic-cas-weak-loops`, `sys-struct-field-ordering`, `sys-iterator-zero-allocation`, `sys-dispatch-tradeoff`)
+   - **Pass 5: Agentic Workflow & Verification Gates** (`wf-verification-gates`, `wf-tdd-loop`, `wf-spec-first`, `wf-atomic-steps`, `wf-debug-systematic`)
 
 ---
 
@@ -39,6 +40,8 @@ You must immediately flag as **FAIL** and reject any code containing:
 6. **Non-Additive Features** (`m-features-additive`): Feature flags in `Cargo.toml` that disable functionality or mutually exclude other features.
 7. **Implicit Dependencies in Macros** (`m-macro-helpers`): Macro expansions referencing external crates not re-exported under `#[doc(hidden)] pub mod _private`.
 8. **Mutable Global State** (`m-avoid-statics`): Any `static mut` or uncoordinated global singletons.
+9. **Flawed Concurrency & Lossy Casts** (`atomic-ordering-pair`, `sync-avoid-spinlock`, `er-casts-avoid-as`): Any user-space spinlock, unjustified `SeqCst`/`Relaxed` at cross-thread boundaries, or silent lossy `as` cast.
+10. **Bypassed Verification Gates & Missing TDD** (`wf-verification-gates`, `wf-tdd-loop`): Declaring tasks complete without running `cargo check`, `cargo clippy -- -D warnings`, and `cargo test`, or adding domain features without failing-then-passing tests.
 
 ---
 
@@ -57,6 +60,7 @@ Every review MUST follow this structured format without omitting any section:
 | **Gate 2: API & Ergonomics**     | [PASS / FAIL] | <count> | `c-getter`, `c-newtype`, `c-common-traits` |
 | **Gate 3: Performance & Memory** | [PASS / FAIL] | <count> | `mem-with-capacity`, `mem-reuse-collections` |
 | **Gate 4: Contracts & Lints**    | [PASS / FAIL] | <count> | `m-lint-override-expect`, `c-failure`, `m-log-not-print` |
+| **Gate 5: Workflow & Gates**     | [PASS / FAIL] | <count> | `wf-verification-gates`, `wf-tdd-loop` |
 
 ---
 

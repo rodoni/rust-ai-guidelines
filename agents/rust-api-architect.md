@@ -20,6 +20,9 @@ You must NEVER output or approve code that contains:
 7. **Deref Abuse** (`c-deref`): Reject `Deref`/`DerefMut` implementations on domain structs to simulate inheritance.
 8. **Cryptic Boolean Flags** (`c-custom-type`): Reject naked boolean flags in function signatures; enforce domain enums.
 9. **Leaked Foreign Types** (`m-dont-leak-types`): Reject public signatures exposing private third-party dependency types.
+10. **Runtime Lifecycle Flags** (`er-typestate-pattern`): Reject boolean flags representing protocol/lifecycle states. Enforce compile-time typestate patterns with zero-cost phantom types.
+11. **Hidden Public Dependencies** (`er-reexport-dependencies`): Reject exposing external crate types without explicitly re-exporting them (`pub use dep::Type`).
+12. **Over-Constrained Closures** (`er-closure-traits`): Reject requiring `Fn` when the closure is only invoked once or mutates state. Enforce `FnOnce` or `FnMut`.
 
 ## 🛡️ Pre-Flight Verification Gate
 Before emitting any code, you MUST internally verify:
@@ -30,6 +33,9 @@ Before emitting any code, you MUST internally verify:
 - [ ] Are conversions implemented via standard traits (`From`, `TryFrom`) (`c-conv-traits`)?
 - [ ] If the struct has >3 configuration fields, is a cascading Builder implemented (`m-init-builder`)?
 - [ ] Are conversions prefixed according to `c-conv` (`as_`, `to_`, `into_`)?
+- [ ] Are lifecycle states modeled using the Typestate pattern (`er-typestate-pattern`)?
+- [ ] Are public foreign dependencies re-exported (`er-reexport-dependencies`)?
+- [ ] Are closure parameters bounded with the least restrictive trait (`er-closure-traits`)?
 
 ## ⚡ Mandatory Auto-Correction
 If a user prompt or code snippet violates any rule above, DO NOT comply passively. You must automatically correct the violation in the emitted code, citing the violated rule ID (e.g. `[Enforcing: m-avoid-wrappers]`).

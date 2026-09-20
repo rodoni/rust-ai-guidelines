@@ -2,14 +2,19 @@
 name: rust-guidelines
 description: >
   Zero-overhead, low-context Rust engineering guidelines combining Microsoft Pragmatic
-  Rust Guidelines and Rust API Guidelines. Contains prioritized rules for API design,
-  memory optimization, async, unsafe correctness, macros, FFI, testing, and AI-ready code.
+  Rust Guidelines, Rust API Guidelines, Mara Bos Atomics and Locks, Effective Rust,
+  and Programming Rust. Contains prioritized rules for API design, memory optimization,
+  concurrency, async, unsafe correctness, macros, FFI, testing, and AI-ready code.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.2.0"
   sources:
     - https://microsoft.github.io/rust-guidelines/
     - https://rust-lang.github.io/api-guidelines/
+    - https://mara.nl/atomics/
+    - https://www.lurklurk.org/effective-rust/
+    - Programming Rust (O'Reilly)
+    - https://tweag.github.io/agentic-coding-handbook/workflows/
 ---
 
 # Rust Guidelines Master Hub
@@ -20,12 +25,14 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 
 | Priority | Category | Prefix | Impact | Skill File |
 |---|---|---|---|---|
-| 1 | **Safety & Correctness** | `unsafe-`, `m-unsound-`, `m-panic-` | CRITICAL | [rust-safety](../rust-safety/SKILL.md) |
-| 2 | **API & Type Ergonomics** | `c-`, `m-` | HIGH | [rust-api](../rust-api/SKILL.md) |
-| 3 | **Performance & Memory** | `mem-`, `m-` | HIGH | [rust-perf](../rust-perf/SKILL.md) |
-| 4 | **Apps, Resilience & AI** | `m-` | MEDIUM | [rust-resilience-app](../rust-resilience-app/SKILL.md) |
-| 5 | **Metaprogramming & Macros**| `m-macro-`, `m-proc-`, `m-example-` | MEDIUM | [rust-macros](../rust-macros/SKILL.md) |
-| 6 | **Native FFI** | `m-ffi-`, `m-isolate-` | SPECIALIZED | [rust-ffi](../rust-ffi/SKILL.md) |
+| 1 | **Agentic Workflows** | `wf-` | CRITICAL | [rust-agentic-workflow](../rust-agentic-workflow/SKILL.md) |
+| 2 | **Safety & Correctness** | `unsafe-`, `m-unsound-`, `m-panic-`, `er-casts-` | CRITICAL | [rust-safety](../rust-safety/SKILL.md) |
+| 3 | **Concurrency & Atomics** | `atomic-`, `sync-` | CRITICAL | [rust-concurrency](../rust-concurrency/SKILL.md) |
+| 4 | **API & Type Ergonomics** | `c-`, `m-`, `er-` | HIGH | [rust-api](../rust-api/SKILL.md) |
+| 5 | **Performance & Memory** | `mem-`, `m-`, `sys-` | HIGH | [rust-perf](../rust-perf/SKILL.md) |
+| 6 | **Apps, Resilience & AI** | `m-` | MEDIUM | [rust-resilience-app](../rust-resilience-app/SKILL.md) |
+| 7 | **Metaprogramming & Macros**| `m-macro-`, `m-proc-`, `m-example-` | MEDIUM | [rust-macros](../rust-macros/SKILL.md) |
+| 8 | **Native FFI** | `m-ffi-`, `m-isolate-` | SPECIALIZED | [rust-ffi](../rust-ffi/SKILL.md) |
 
 ---
 
@@ -40,8 +47,17 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`c-dtor-fail`](../../rules/c-dtor-fail.md) - Destructors (`Drop` trait) must never panic.
 - [`m-avoid-statics`](../../rules/m-avoid-statics.md) - Avoid mutable global statics; pass state explicitly.
 - [`m-strong-types-guard`](../../rules/m-strong-types-guard.md) - Enforce domain invariants upon type construction (*Parse, Don't Validate*).
+- [`er-casts-avoid-as`](../../rules/er-casts-avoid-as.md) - Avoid lossy numeric `as` casts; use `TryFrom`/`TryInto` or checked methods.
+- [`er-raii-guard`](../../rules/er-raii-guard.md) - Encapsulate state cleanup and resource release into RAII guards (`Drop`).
 
-### 2. API & Ergonomics (HIGH)
+### 2. Concurrency & Atomics (CRITICAL)
+- [`atomic-ordering-pair`](../../rules/atomic-ordering-pair.md) - Pair `Release` stores with `Acquire` loads; avoid unjustified `Relaxed` or `SeqCst`.
+- [`sync-avoid-spinlock`](../../rules/sync-avoid-spinlock.md) - Avoid busy-wait spinlocks in user space; use OS blocking locks or futexes.
+- [`sync-cacheline-padding`](../../rules/sync-cacheline-padding.md) - Pad hot atomic variables across threads to avoid false sharing.
+- [`sync-lock-hierarchy`](../../rules/sync-lock-hierarchy.md) - Enforce deterministic lock acquisition order to mathematically prevent deadlocks.
+- [`atomic-cas-weak-loops`](../../rules/atomic-cas-weak-loops.md) - Prefer `compare_exchange_weak` in atomic retry loops.
+
+### 3. API & Ergonomics (HIGH)
 - [`c-case`](../../rules/c-case.md) - Strict RFC 430 casing conventions.
 - [`c-conv`](../../rules/c-conv.md) - Naming ad-hoc conversions (`as_` borrow, `to_` copy, `into_` move).
 - [`c-getter`](../../rules/c-getter.md) - Omit `get_` prefix on standard accessors.
@@ -62,8 +78,11 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`c-generic`](../../rules/c-generic.md) - Functions minimize assumptions by using generic bounds (`impl AsRef<Path>`).
 - [`c-smart-ptr`](../../rules/c-smart-ptr.md) - Smart pointers do not introduce inherent methods.
 - [`m-dont-leak-types`](../../rules/m-dont-leak-types.md) - Do not expose unexported foreign crate types in public signatures.
+- [`er-typestate-pattern`](../../rules/er-typestate-pattern.md) - Express lifecycle states in generic phantom types (Typestate).
+- [`er-reexport-dependencies`](../../rules/er-reexport-dependencies.md) - Re-export third-party types that appear in public API signatures.
+- [`er-closure-traits`](../../rules/er-closure-traits.md) - Accept least restrictive closure traits (`Fn` > `FnMut` > `FnOnce`).
 
-### 3. Performance & Memory (HIGH)
+### 4. Performance & Memory (HIGH)
 - [`mem-with-capacity`](../../rules/mem-with-capacity.md) - Always preallocate collection capacity when size is known.
 - [`mem-reuse-collections`](../../rules/mem-reuse-collections.md) - Clear and reuse buffers in loops to prevent allocator churn.
 - [`m-box-dst`](../../rules/m-box-dst.md) - Use `Box<[T]>` or `Box<str>` for immutable owned sequences.
@@ -71,8 +90,11 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`m-fast-hasher`](../../rules/m-fast-hasher.md) - Use `ahash` or `foldhash` for internal HashMaps.
 - [`m-async-stack-size`](../../rules/m-async-stack-size.md) - Box large buffers kept across `.await` points.
 - [`m-yield-points`](../../rules/m-yield-points.md) - Insert cooperative yield points in CPU-bound async loops.
+- [`sys-struct-field-ordering`](../../rules/sys-struct-field-ordering.md) - Order struct fields largest-to-smallest to eliminate padding holes.
+- [`sys-iterator-zero-allocation`](../../rules/sys-iterator-zero-allocation.md) - Chain iterators lazily without intermediate heap allocations.
+- [`sys-dispatch-tradeoff`](../../rules/sys-dispatch-tradeoff.md) - Static dispatch in hot loops; dynamic dispatch (`dyn`) on cold paths.
 
-### 4. Apps, Resilience & AI (MEDIUM)
+### 5. Apps, Resilience & AI (MEDIUM)
 - [`m-mimalloc-apps`](../../rules/m-mimalloc-apps.md) - Configure `mimalloc` as the global allocator in application binaries.
 - [`m-cargo-workspace`](../../rules/m-cargo-workspace.md) - Centralize all dependency versions under `[workspace.dependencies]`.
 - [`m-smaller-crates`](../../rules/m-smaller-crates.md) - Decompose monolithic crates into single-responsibility workspace crates.
@@ -86,13 +108,21 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`m-log-structured`](../../rules/m-log-structured.md) - Structured telemetry with key-value fields rather than string interpolation.
 - [`m-features-additive`](../../rules/m-features-additive.md) - Cargo features must be strictly additive; never mutually exclusive.
 
-### 5. Metaprogramming & Macros (MEDIUM)
+### 6. Metaprogramming & Macros (MEDIUM)
 - [`m-macro-last-resort`](../../rules/m-macro-last-resort.md) - Treat macros as a last resort; prefer functions and traits.
 - [`m-example-over-proc`](../../rules/m-example-over-proc.md) - Prefer declarative `macro_rules!` over procedural macros.
 - [`m-proc-impl`](../../rules/m-proc-impl.md) - Separate procedural macro AST logic into a testable internal crate.
 - [`m-macro-helpers`](../../rules/m-macro-helpers.md) - Re-export external macro dependencies under `#[doc(hidden)] pub mod _private`.
 
-### 6. Native FFI (SPECIALIZED)
+### 7. Native FFI (SPECIALIZED)
 - [`m-ffi-translates`](../../rules/m-ffi-translates.md) - FFI crates only translate types; core logic belongs in pure Rust crates.
 - [`m-isolate-dll-state`](../../rules/m-isolate-dll-state.md) - Return opaque pointers and isolate dynamic library state.
 - [`m-ffi-naming`](../../rules/m-ffi-naming.md) - Exported C-ABI functions follow strict `<crate>_<type>_<method>` naming.
+
+### 8. Agentic Workflows & Methodology (CRITICAL)
+- [`wf-spec-first`](../../rules/wf-spec-first.md) - Design types, traits, contracts, and invariants before modifying code.
+- [`wf-atomic-steps`](../../rules/wf-atomic-steps.md) - Execute changes in small, testable, and reversible steps.
+- [`wf-verification-gates`](../../rules/wf-verification-gates.md) - Validate code via `cargo fmt`, `check`, `clippy -D warnings`, and `test`.
+- [`wf-tdd-loop`](../../rules/wf-tdd-loop.md) - Write failing tests before implementing features or fixes (Red-Green-Refactor).
+- [`wf-debug-systematic`](../../rules/wf-debug-systematic.md) - Isolate bugs through minimal reproduction and evidence; never guess randomly.
+

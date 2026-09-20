@@ -62,7 +62,8 @@ def check_rule_references():
         readme_text = f.read()
 
     readme_rules = set(re.findall(r'`([a-z0-9-]+)`', readme_text))
-    readme_rule_candidates = {r for r in readme_rules if r.startswith(("m-", "c-", "mem-", "unsafe-"))}
+    valid_prefixes = ("m-", "c-", "mem-", "unsafe-", "atomic-", "sync-", "er-", "sys-", "wf-")
+    readme_rule_candidates = {r for r in readme_rules if r.startswith(valid_prefixes)}
     missing_from_readme = readme_rule_candidates - rules_on_disk
     if missing_from_readme:
         error(f"README.md references non-existent rules: {missing_from_readme}")
@@ -75,7 +76,7 @@ def check_rule_references():
         with open(af, "r", encoding="utf-8") as f:
             text = f.read()
         tokens = set(re.findall(r'`([a-z0-9-]+)`', text))
-        candidates = {r for r in tokens if r.startswith(("m-", "c-", "mem-", "unsafe-"))}
+        candidates = {r for r in tokens if r.startswith(valid_prefixes)}
         missing = candidates - rules_on_disk
         if missing:
             error(f"{af} references non-existent rules: {missing}")

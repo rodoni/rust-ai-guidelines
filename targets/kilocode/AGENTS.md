@@ -22,7 +22,9 @@ Modular domain skills loaded on demand:
 - `rust-guidelines`: Master rule index and routing hub.
 - `rust-api`: API ergonomics and naming conventions.
 - `rust-perf`: Performance, memory management, and async stack tuning.
+- `rust-concurrency`: Low-level atomics, memory ordering, and synchronization.
 - `rust-safety`: Unsafe invariants, FFI soundness, and panic handling.
 - `rust-macros`: Declarative and procedural macro conventions.
 - `rust-ffi`: Native C-ABI bindings and memory isolation.
 - `rust-resilience-app`: Sans-I/O architecture, mockable syscalls, and AI test contracts.
+- `rust-agentic-workflow`: Spec-First, TDD, atomic steps, and verification gates.
