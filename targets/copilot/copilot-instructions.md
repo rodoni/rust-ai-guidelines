@@ -20,3 +20,8 @@ This project adheres to the **Rust AI Guidelines** for low-context, high-soundne
    - Reserve panics strictly for unrecoverable programming bugs.
 8. **Cargo Workspace**:
    - Centralize dependency versions in `[workspace.dependencies]` at the workspace root Cargo.toml.
+9. **Testing & Invariants**:
+   - Assert specific error variants (`matches!`), never just `.is_err()`.
+   - Never use wall-clock `thread::sleep` in tests; use virtual clocks or `tokio::time::pause()`.
+   - Use property-based testing (`proptest`) for pure functions, codecs, and domain invariants.
+

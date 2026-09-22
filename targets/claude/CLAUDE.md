@@ -16,3 +16,4 @@ This repository follows the **Rust AI Guidelines** for low-context, high-soundne
 - `rust-perf-optimizer`: Memory reuse, fast hashers, and async stack tuning.
 - `rust-safety-auditor`: Unsafe soundness, FFI boundaries, and panic-free paths.
 - `rust-reviewer`: Exhaustive compliance review, clippy `#[expect]` overrides, and zero-omission code hygiene.
+- `rust-test-engineer`: High-confidence unit, property-based (`proptest`), and TDD testing.

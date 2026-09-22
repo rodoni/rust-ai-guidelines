@@ -62,7 +62,7 @@ def check_rule_references():
         readme_text = f.read()
 
     readme_rules = set(re.findall(r'`([a-z0-9-]+)`', readme_text))
-    valid_prefixes = ("m-", "c-", "mem-", "unsafe-", "atomic-", "sync-", "er-", "sys-", "wf-")
+    valid_prefixes = ("m-", "c-", "mem-", "unsafe-", "atomic-", "sync-", "er-", "sys-", "wf-", "test-")
     readme_rule_candidates = {r for r in readme_rules if r.startswith(valid_prefixes)}
     missing_from_readme = readme_rule_candidates - rules_on_disk
     if missing_from_readme:

@@ -14,13 +14,14 @@ Combinando seis das maiores referências mundiais em engenharia Rust e orquestra
 - *Programming Rust: Fast, Safe Systems Development* por Jim Blandy, Jason Orendorff e Leonora Tindall (Layout de memória e zero-cost abstractions)
 - [Tweag Agentic Coding Handbook](https://tweag.github.io/agentic-coding-handbook/workflows/) (Core Workflows: Spec-First, TDD, Atomic Steps & Verification Gates)
 
-Diferente de abordagens ingênuas que despejam livros inteiros na janela de contexto das LLMs — desperdiçando dezenas de milhares de tokens e gerando alucinações —, este ecossistema destila **as 72 regras mais críticas e fundamentais**:
+Diferente de abordagens ingênuas que despejam livros inteiros na janela de contexto das LLMs — desperdiçando dezenas de milhares de tokens e gerando alucinações —, este ecossistema destila **as 78 regras mais críticas e fundamentais**:
 1. **Segurança e Soundness Inegociáveis**: Zero tolerância para `unsafe` sem `// SAFETY:`, prevenção estrita de *Undefined Behavior*, destrutores sem pânico e sound C-ABI FFI.
 2. **Metodologia Agêntica Tweag (Core Workflows)**: Abordagem *Spec-First*, passos atômicos incrementais, portões determinísticos de verificação contínua (`cargo fmt`, `check`, `clippy -D warnings`, `test`) e ciclo TDD.
 3. **Concorrência e Atômicos de Baixo Nível**: Sincronização causal `Release`/`Acquire`, eliminação de spinlocks em user-space, cache line padding contra *false sharing* e prevenção estrita de deadlocks.
 4. **Eficiência de Memória e Compilação**: Pré-alocação cirúrgica, reaproveitamento de buffers (`.clear()`), `Box<[T]>`, ordenação de campos contra padding e iteração zero-allocation.
 5. **Ergonomia e Robustez de APIs**: Typestate pattern, Newtypes contra obsessão primitiva, re-exportação de dependências públicas e flexibilidade de closures.
 6. **Resiliência e Observabilidade Corporativa**: Telemetria estruturada (`tracing`), separação entre logging e saída deliberada de CLI, features preferencialmente aditivas e `[workspace.dependencies]` centralizado.
+7. **Engenharia de Testes de Alta Confiança**: Testes baseados em propriedades (`proptest`), fakes leves em memória, eliminação de sleeps em tempo virtual e asserções estritas de variantes de erro.
 
 > ⚡ **Zero Token Waste**: Cada regra é atômica (30 a 60 linhas), auto-contida e carregada **sob demanda** pelos agentes especializados.
 
@@ -51,6 +52,7 @@ Em vez de sobrecarregar um único prompt genérico com dezenas de milhares de to
 | **`rust-perf-optimizer`** | [`agents/rust-perf-optimizer.md`](agents/rust-perf-optimizer.md) | Otimização de memória, layout de structs, padding, cache lines, buffers e async stack. |
 | **`rust-safety-auditor`** | [`agents/rust-safety-auditor.md`](agents/rust-safety-auditor.md) | Auditoria de `unsafe`, ordenação atômica, lock hierarchy, sound boundaries e debugging sistemático. |
 | **`rust-reviewer`** | [`agents/rust-reviewer.md`](agents/rust-reviewer.md) | Guardião dos Verification Gates, TDD, lints com `#[expect]` e conformidade com zero omissões. |
+| **`rust-test-engineer`** | [`agents/rust-test-engineer.md`](agents/rust-test-engineer.md) | Engenharia de testes determinísticos, property-based (`proptest`), TDD e fixtures. |
 
 ### 📊 Matriz de Mapeamento: Agentes ➔ Skills ➔ Regras
 
@@ -61,6 +63,7 @@ Em vez de sobrecarregar um único prompt genérico com dezenas de milhares de to
 | **`rust-perf-optimizer`** | [`rust-perf`](skills/rust-perf/SKILL.md) *(Memória & Layout)* | [`rust-concurrency`](skills/rust-concurrency/SKILL.md), `rust-api`, `rust-resilience-app` | `mem-with-capacity`, `mem-reuse-collections`, `m-box-dst`, `m-shrink-to-fit`, `m-fast-hasher`, `m-async-stack-size`, `m-yield-points`, `m-mimalloc-apps`, `sync-cacheline-padding`, `atomic-cas-weak-loops`, `sys-struct-field-ordering`, `sys-iterator-zero-allocation`, `sys-dispatch-tradeoff` |
 | **`rust-safety-auditor`** | [`rust-safety`](skills/rust-safety/SKILL.md) *(Soundness & Concorrência)* | [`rust-concurrency`](skills/rust-concurrency/SKILL.md), [`rust-ffi`](skills/rust-ffi/SKILL.md), `rust-api` | `unsafe-safety-comment`, `unsafe-minimize-scope`, `m-unsound-prevention`, `m-panic-on-bug`, `m-errors-canonical`, `c-dtor-fail`, `m-avoid-statics`, `m-strong-types-guard`, `m-ffi-translates`, `m-isolate-dll-state`, `m-ffi-naming`, `atomic-ordering-pair`, `sync-avoid-spinlock`, `sync-lock-hierarchy`, `er-casts-avoid-as`, `er-raii-guard`, `wf-debug-systematic` |
 | **`rust-reviewer`** | [`rust-resilience-app`](skills/rust-resilience-app/SKILL.md) *(Lints & Contratos)* | [`rust-agentic-workflow`](skills/rust-agentic-workflow/SKILL.md), `rust-safety`, `rust-concurrency`, `rust-api`, `rust-perf` | `wf-verification-gates`, `wf-tdd-loop`, `m-lint-override-expect`, `c-failure`, `m-macro-helpers`, `m-test-util`, `m-app-error`, `m-design-for-ai`, `m-log-not-print`, `m-log-structured`, `m-features-additive`, `atomic-ordering-pair`, `sync-avoid-spinlock`, `er-casts-avoid-as` |
+| **`rust-test-engineer`** | [`rust-testing`](skills/rust-testing/SKILL.md) *(Testes & Invariantes)* | [`rust-agentic-workflow`](skills/rust-agentic-workflow/SKILL.md), `rust-resilience-app`, `rust-api` | `test-property-based`, `test-assert-error-variants`, `test-deterministic-no-sleep`, `test-fakes-over-heavy-mocks`, `test-behavior-not-internals`, `test-snapshot-for-complex-data`, `wf-tdd-loop`, `wf-verification-gates`, `m-test-util`, `m-mockable-syscalls` |
 
 ---
 
@@ -76,7 +79,8 @@ As diretrizes são organizadas em skills temáticas carregadas sob demanda:
 6. **[`rust-safety`](skills/rust-safety/SKILL.md)**: Comentários obrigatórios `// SAFETY:`, escopo cirúrgico de `unsafe`, sound FFI, casts seguros (`TryFrom`) e RAII guards.
 7. **[`rust-macros`](skills/rust-macros/SKILL.md)**: Macros declarativas antes de procedurais, crates de implementação separadas e exportação `_private`.
 8. **[`rust-ffi`](skills/rust-ffi/SKILL.md)**: Isolamento de estado DLL, ponte FFI pura sem regra de negócio acoplada e C-ABI naming.
-9. **[`rust-resilience-app`](skills/rust-resilience-app/SKILL.md)**: Arquitetura "sans I/O" (syscalls mockáveis), `test-util` feature gate e contratos de documentação para IA.
+9. **[`rust-resilience-app`](skills/rust-resilience-app/SKILL.md)**: Arquitetura "sans I/O" (syscalls mockáveis), `m-test-util` feature gate e contratos de documentação para IA.
+10. **[`rust-testing`](skills/rust-testing/SKILL.md)**: Testes unitários e de integração, property-based testing (`proptest`), snapshots (`insta`), fakes e async determinístico.
 
 ---
 
@@ -89,9 +93,9 @@ As regras em [`rules/`](rules/) seguem uma estrutura padronizada, com conteúdo 
 - **Good**: Snippet corrigido, idiomático e com zero desperdício de memória ou CPU.
 - **When Acceptable / See Also**: Casos válidos de exceção e links correlatos.
 
-### 📋 Catálogo Completo das 72 Regras Atômicas
+### 📋 Catálogo Completo das 78 Regras Atômicas
 
-Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossistema:
+Tabela consolidada de todas as **78 regras essenciais** implementadas no ecossistema:
 
 | Categoria | Regra | Origem | Diretriz Atômica |
 |---|---|---|---|
@@ -167,6 +171,12 @@ Tabela consolidada de todas as **72 regras essenciais** implementadas no ecossis
 | **Native FFI** | [`m-ffi-naming`](rules/m-ffi-naming.md) | Local convention informed by FFI practices | Exported C-ABI functions should use an explicit, collision-resistant namespace. |
 | **Native FFI** | [`m-ffi-translates`](rules/m-ffi-translates.md) | Microsoft Pragmatic Rust / FFI practices | FFI boundary crates translate types and calls; business logic belongs in pure Rust core crates. |
 | **Native FFI** | [`m-isolate-dll-state`](rules/m-isolate-dll-state.md) | Microsoft Pragmatic Rust | Isolate global runtime state when exposing Rust libraries as dynamic libraries (DLLs/so/dylib). |
+| **Testes & Invariantes** | [`test-property-based`](rules/test-property-based.md) | Practical Property Testing | Use property-based testing (`proptest`) for pure functions, parsers, codecs, and domain invariants. |
+| **Testes & Invariantes** | [`test-assert-error-variants`](rules/test-assert-error-variants.md) | Pragmatic Testing | Assert specific error enum variants with `matches!` or `assert_matches!`, never just `.is_err()`. |
+| **Testes & Invariantes** | [`test-deterministic-no-sleep`](rules/test-deterministic-no-sleep.md) | Pragmatic Testing | Eliminate wall-clock sleeps (`std::thread::sleep`) in unit tests; use simulated clocks or `tokio::time::pause()`. |
+| **Testes & Invariantes** | [`test-fakes-over-heavy-mocks`](rules/test-fakes-over-heavy-mocks.md) | Practical Testing | Favor in-memory fakes and thin traits over complex dynamic mocking frameworks with lifetimes. |
+| **Testes & Invariantes** | [`test-behavior-not-internals`](rules/test-behavior-not-internals.md) | Pragmatic Testing | Test observable module behavior and domain invariants, not private volatile implementation details. |
+| **Testes & Invariantes** | [`test-snapshot-for-complex-data`](rules/test-snapshot-for-complex-data.md) | Practical Testing | Use snapshot testing (`insta`) for complex nested data structures, ASTs, compiler diagnostics, and CLI outputs. |
 
 ---
 

@@ -16,6 +16,7 @@ Specialized subagents available in this project (invocable via `@agent-name` or 
 - **`rust-perf-optimizer`**: Memory layout, buffer re-use, mimalloc, and async throughput.
 - **`rust-safety-auditor`**: Soundness verification, `unsafe` scope minimization, and FFI boundaries.
 - **`rust-reviewer`**: Exhaustive compliance review, lints with `#[expect]`, and contracts with zero omissions.
+- **`rust-test-engineer`**: High-confidence unit, property-based (`proptest`), and TDD testing.
 
 ## Skills (`.kilo/skills/`)
 Modular domain skills loaded on demand:
@@ -28,3 +29,4 @@ Modular domain skills loaded on demand:
 - `rust-ffi`: Native C-ABI bindings and memory isolation.
 - `rust-resilience-app`: Sans-I/O architecture, mockable syscalls, and AI test contracts.
 - `rust-agentic-workflow`: Spec-First, TDD, atomic steps, and verification gates.
+- `rust-testing`: Unit, integration, property-based, and deterministic async testing.
