@@ -8,6 +8,7 @@ This file configures the specialized Rust Agentic ecosystem for Google Antigravi
 - **`rust-perf-optimizer`**: Memory and async throughput.
 - **`rust-safety-auditor`**: Soundness, unsafe, and FFI.
 - **`rust-reviewer`**: Exhaustive compliance, lints, and contract review.
+- **`rust-test-engineer`**: High-confidence unit, property-based (`proptest`), and TDD testing.
 
 ## Available Skills (`.agents/skills/`)
 The skills are located under `.agents/skills/`:
@@ -20,3 +21,4 @@ The skills are located under `.agents/skills/`:
 - `rust-ffi`: Native C-ABI boundaries
 - `rust-resilience-app`: Applications, testing & AI guidelines
 - `rust-agentic-workflow`: Spec-First, TDD, atomic steps & verification gates
+- `rust-testing`: Unit, integration, property-based & async testing

@@ -32,7 +32,8 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 | 5 | **Performance & Memory** | `mem-`, `m-`, `sys-` | HIGH | [rust-perf](../rust-perf/SKILL.md) |
 | 6 | **Apps, Resilience & AI** | `m-` | MEDIUM | [rust-resilience-app](../rust-resilience-app/SKILL.md) |
 | 7 | **Metaprogramming & Macros**| `m-macro-`, `m-proc-`, `m-example-` | MEDIUM | [rust-macros](../rust-macros/SKILL.md) |
-| 8 | **Native FFI** | `m-ffi-`, `m-isolate-` | SPECIALIZED | [rust-ffi](../rust-ffi/SKILL.md) |
+| 8 | **Testing & Verification** | `test-` | HIGH | [rust-testing](../rust-testing/SKILL.md) |
+| 9 | **Native FFI** | `m-ffi-`, `m-isolate-` | SPECIALIZED | [rust-ffi](../rust-ffi/SKILL.md) |
 
 ---
 
@@ -125,3 +126,12 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`wf-verification-gates`](../../rules/wf-verification-gates.md) - Validate code via `cargo fmt`, `check`, `clippy -D warnings`, and `test`.
 - [`wf-tdd-loop`](../../rules/wf-tdd-loop.md) - Write failing tests before implementing features or fixes (Red-Green-Refactor).
 - [`wf-debug-systematic`](../../rules/wf-debug-systematic.md) - Isolate bugs through minimal reproduction and evidence; never guess randomly.
+
+### 9. Testing & Verification (HIGH)
+- [`test-property-based`](../../rules/test-property-based.md) - Use property-based testing (`proptest`) for pure logic, codecs, and invariants.
+- [`test-assert-error-variants`](../../rules/test-assert-error-variants.md) - Assert specific error enum variants with `matches!`, never just `.is_err()`.
+- [`test-deterministic-no-sleep`](../../rules/test-deterministic-no-sleep.md) - Eliminate wall-clock `sleep`; use simulated time or `tokio::time::pause()`.
+- [`test-fakes-over-heavy-mocks`](../../rules/test-fakes-over-heavy-mocks.md) - Prefer simple in-memory fakes over complex dynamic mocking frameworks.
+- [`test-behavior-not-internals`](../../rules/test-behavior-not-internals.md) - Test observable module contracts and invariants, not ephemeral private helpers.
+- [`test-snapshot-for-complex-data`](../../rules/test-snapshot-for-complex-data.md) - Use snapshot testing (`insta`) for large structs, ASTs, and CLI output.
+
