@@ -3,7 +3,7 @@
 > Every `unsafe` block must have an explicit `// SAFETY:` comment justifying why it is sound.
 
 ## Why It Matters
-Without a `// SAFETY:` comment, reviewers and AI agents cannot verify whether the author considered the necessary invariants, making code audits and maintenance unsafe.
+Without a `// SAFETY:` comment, reviewers and AI agents cannot verify whether the author considered the necessary invariants, making code audits and maintenance unsafe. This convention is enforced by the official Clippy lint `clippy::undocumented_unsafe_blocks` and standard Rust safety conventions.
 
 ## Bad
 ```rust
@@ -23,3 +23,7 @@ A good `// SAFETY:` comment specifies:
 1. Pointer validity / alignment / non-null guarantees.
 2. Invariant preservation.
 3. Lifetime or alias uniqueness assurances.
+
+## See Also
+- [unsafe-minimize-scope](unsafe-minimize-scope.md) - Restrict `unsafe` to the smallest possible block
+- [m-unsound-prevention](m-unsound-prevention.md) - Safe public APIs wrapping `unsafe` must be sound

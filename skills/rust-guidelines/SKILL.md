@@ -44,7 +44,7 @@ Ultra-concise, low-context engineering rules for AI coding agents and Rust devel
 - [`unsafe-minimize-scope`](../../rules/unsafe-minimize-scope.md) - Restrict `unsafe` strictly to the single triggering operation.
 - [`m-unsound-prevention`](../../rules/m-unsound-prevention.md) - Safe public APIs wrapping `unsafe` must be 100% sound under all inputs.
 - [`m-panic-on-bug`](../../rules/m-panic-on-bug.md) - Panics are strictly for programming bugs; use `Result` for runtime fallibility.
-- [`m-errors-canonical`](../../rules/m-errors-canonical.md) - Library errors must be typed and inspectable; use `thiserror` when appropriate.
+- [`m-errors-canonical`](../../rules/m-errors-canonical.md) - Library errors are situation-specific structs with backtraces and query methods.
 - [`c-dtor-fail`](../../rules/c-dtor-fail.md) - Destructors (`Drop` trait) must never panic.
 - [`m-avoid-statics`](../../rules/m-avoid-statics.md) - Avoid mutable global statics; pass state explicitly.
 - [`m-strong-types-guard`](../../rules/m-strong-types-guard.md) - Enforce domain invariants upon type construction (*Parse, Don't Validate*).

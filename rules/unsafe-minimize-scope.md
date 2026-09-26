@@ -3,7 +3,7 @@
 > Keep `unsafe` blocks as small as possible; never wrap safe operations inside `unsafe`.
 
 ## Why It Matters
-Wrapping multiple lines or entire functions in `unsafe` obscures which exact operation triggers the need for unsafety and turns off safety scrutiny for ordinary code within that block.
+Wrapping multiple lines or entire functions in `unsafe` obscures which exact operation triggers the need for unsafety and turns off compiler safety scrutiny for ordinary code within that block (enforced by Rustonomicon principles and `clippy::undocumented_unsafe_blocks`).
 
 ## Bad
 ```rust
@@ -25,3 +25,7 @@ let val = unsafe { *raw };
 println!("Val is: {val}");
 notify_listener(val);
 ```
+
+## See Also
+- [unsafe-safety-comment](unsafe-safety-comment.md) - Mandatory `// SAFETY:` comment
+- [m-unsound-prevention](m-unsound-prevention.md) - Safe public APIs wrapping `unsafe` must be sound
