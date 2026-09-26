@@ -3,7 +3,7 @@
 > Reserve collection capacity when a reliable estimate makes the allocation worthwhile.
 
 ## Why It Matters
-A `Vec` may reallocate as items are pushed. A reliable capacity estimate can avoid those reallocations, but an excessive or attacker-controlled estimate increases memory use and latency.
+A `Vec` may reallocate as items are pushed. A reliable capacity estimate can avoid those reallocations, but an excessive or attacker-controlled estimate increases memory use and latency (Microsoft Pragmatic Rust `M-INITIAL-CAPACITY`).
 
 ## Bad
 ```rust
@@ -22,5 +22,6 @@ for i in 0..10_000 {
 ```
 
 ## See Also
+- [mem-reuse-collections](mem-reuse-collections.md) - Reuse allocations across iterations
 - [m-box-dst](m-box-dst.md) - Shrink immutable vectors to Boxed slices
 - [m-shrink-to-fit](m-shrink-to-fit.md) - Free excess capacity

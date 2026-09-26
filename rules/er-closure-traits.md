@@ -1,9 +1,9 @@
 # er-closure-traits
 
-> Accept the least restrictive closure trait required by the call pattern (`FnOnce`, `FnMut`, or `Fn`); this rule is an API-design convention, not an Effective Rust item mapping.
+> Accept the least restrictive closure trait required by the call pattern: prefer `FnOnce` over `FnMut`, and `FnMut` over `Fn`.
 
 ## Why It Matters
-A closure implementing `Fn` can also satisfy `FnMut` and `FnOnce`, but the reverse is not true. Use `FnOnce` for one call, `FnMut` for repeated calls that may mutate captured state, and `Fn` for repeated non-mutating calls. Requiring a stronger bound than the call pattern needs artificially excludes valid closures.
+In Rust's closure traits hierarchy (and Effective Rust Item 10 standard traits), closures follow a strict subtyping relationship: every closure implementing `Fn` also implements `FnMut` and `FnOnce`, but the reverse is not true. Requiring `Fn` when `FnOnce` suffices artificially blocks closures that take ownership of captured variables. Use `FnOnce` for one-shot execution, `FnMut` for stateful loops, and `Fn` only when repeated concurrent or non-mutating access is required.
 
 ## Bad
 ```rust

@@ -3,7 +3,7 @@
 > Clear and reuse existing buffer allocations across iterations instead of allocating new ones.
 
 ## Why It Matters
-Allocating and dropping collections inside tight loops generates massive allocator pressure and CPU cache churn. `.clear()` retains capacity while resetting length to 0.
+Allocating and dropping collections inside tight loops generates massive allocator pressure and CPU cache churn. `.clear()` retains capacity while resetting length to 0 (Microsoft Pragmatic Rust `M-MEM-REUSE`).
 
 ## Bad
 ```rust
@@ -24,3 +24,7 @@ for record in stream {
     sink.write_all(&buffer);
 }
 ```
+
+## See Also
+- [mem-with-capacity](mem-with-capacity.md) - Reserve initial capacity
+- [m-shrink-to-fit](m-shrink-to-fit.md) - Shrink long-lived collections

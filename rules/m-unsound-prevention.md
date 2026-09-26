@@ -3,7 +3,7 @@
 > Public safe APIs wrapping `unsafe` internals must be 100% sound under all possible inputs.
 
 ## Why It Matters
-If a public safe function can trigger undefined behavior (UB) with any safe inputs or calling patterns, the crate is unsound. Safe code must never be able to cause memory corruption or UB.
+If a public safe function can trigger undefined behavior (UB) with any safe inputs or calling patterns, the crate is unsound (Microsoft Pragmatic Rust `M-UNSOUND`). Safe code must never be able to cause memory corruption or UB under any safe caller operations.
 
 ## Bad
 ```rust
@@ -42,3 +42,7 @@ impl<'a> SafeSlice<'a> {
     }
 }
 ```
+
+## See Also
+- [unsafe-safety-comment](unsafe-safety-comment.md) - Mandatory `// SAFETY:` justifications
+- [unsafe-minimize-scope](unsafe-minimize-scope.md) - Restrict `unsafe` to the smallest possible block
