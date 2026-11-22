@@ -6,6 +6,26 @@ O formato segue as convenções de [Keep a Changelog](https://keepachangelog.com
 
 ---
 
+## [1.3.0] - 2026-11-22
+
+### Adicionado (Added)
+- **Agente `rust-dev`**: Persona unificada para planejamento Spec-First e implementação ponta a ponta, com roteamento para skills de domínio sob demanda.
+- **Agente `rust-tester`**: Persona dedicada a testes de comportamento, limites, invariantes e verificação apropriada ao workspace.
+- **Migração seletiva de agentes**: [`scripts/clean-legacy-agents.sh`](scripts/clean-legacy-agents.sh) remove somente os cinco agentes legados gerenciados pelo pacote, preservando agentes personalizados nos diretórios de destino.
+- **Avaliação OpenCode**: Harness A/B, fixture isolado, tarefas e rubricas, preflight sem provedor e resultados exploratórios em [`evaluation/opencode/`](evaluation/opencode/).
+
+### Modificado (Changed)
+- **Personas consolidadas**: Reduzidas de seis agentes especializados para `rust-dev`, `rust-reviewer` e `rust-tester`; detalhes temáticos passam a ser consultados nas skills e regras relevantes.
+- **Revisão baseada em evidências**: `rust-reviewer` agora prioriza achados acionáveis, delimita o escopo e não presume que gates foram executados.
+- **Instruções dos alvos**: Antigravity, Claude, Copilot, Cursor, Kilo Code e OpenCode documentam as três personas, respeitando as capacidades de cada integração.
+
+### Corrigido (Fixed)
+- **Deploy de agentes existentes**: Scripts de setup removem agentes obsoletos do pacote antes da instalação e preservam conteúdo não gerenciado.
+- **Verificação estrutural**: `scripts/verify.py` valida o conjunto de personas, referências operacionais, catálogo README e migração seletiva em todos os alvos.
+- **Acumuladores inteiros**: Orientação do `rust-dev` exige provar limites a partir da faixa dos elementos e do tamanho máximo da entrada, evitando presumir que `i64` basta para uma fatia arbitrária.
+
+---
+
 ## [1.2.1] - 2026-09-25
 
 ### Corrigido (Fixed)

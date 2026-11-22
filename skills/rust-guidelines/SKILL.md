@@ -7,7 +7,7 @@ description: >
   concurrency, async, unsafe correctness, macros, FFI, testing, and AI-ready code.
 license: MIT
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
   sources:
     - https://microsoft.github.io/rust-guidelines/
     - https://rust-lang.github.io/api-guidelines/
