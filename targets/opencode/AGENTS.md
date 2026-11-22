@@ -6,12 +6,9 @@ Instructions for OpenCode / OpenCodeInterpreter working with Rust repositories.
 Before generating or refactoring Rust code, refer to the atomic rule files under `.opencode/rules/` (or `rules/`). Do not load entire books into context; load only the specific rule ID needed for the task.
 
 ### Available Agents / Personas (`.opencode/agents/`)
-- **`rust-lead`**: High-level triage, modular workspace architecture, and planning.
-- **`rust-api-architect`**: Follows `c-case`, `c-conv`, `c-getter`, `c-common-traits`, `m-avoid-wrappers`, `m-init-builder`.
-- **`rust-perf-optimizer`**: Follows `mem-with-capacity`, `mem-reuse-collections`, `m-box-dst`, `m-fast-hasher`.
-- **`rust-safety-auditor`**: Follows `unsafe-safety-comment`, `unsafe-minimize-scope`, `m-unsound-prevention`, `m-panic-on-bug`.
-- **`rust-reviewer`**: Follows `m-lint-override-expect`, `c-failure`, `m-design-for-ai`.
-- **`rust-test-engineer`**: Follows `test-property-based`, `test-assert-error-variants`, `test-deterministic-no-sleep`, `wf-tdd-loop`.
+- **`rust-dev`**: Plans and implements changes; routes to relevant API, performance, safety, concurrency, FFI, and workflow skills.
+- **`rust-reviewer`**: Reviews changes independently and reports actionable findings with file/line evidence and scope limitations.
+- **`rust-tester`**: Designs and runs deterministic behavior, boundary, and invariant tests with appropriate verification gates.
 
 ### Modular Skills (`.opencode/skills/`)
 Domain skill sets available for on-demand inspection:

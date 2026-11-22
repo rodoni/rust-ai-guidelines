@@ -2,6 +2,9 @@
 
 This project adheres to the **Rust AI Guidelines** for low-context, high-soundness Rust development.
 
+## Agent Role Routing
+This integration provides instructions rather than a subagent directory. When role routing is available, use `rust-dev` for implementation, `rust-tester` for test design and execution, and `rust-reviewer` for independent review. These are repository personas, not Copilot subagents installed by this target.
+
 ## Core Rules for Code Generation
 1. **Naming & Casing (RFC 430)**: UpperCamelCase for types, snake_case for functions/variables, SCREAMING_SNAKE_CASE for consts.
 2. **Accessors**: Never prefix getters with `get_`. Use `field()` for immutable access and `field_mut()` for mutable access.
@@ -24,4 +27,3 @@ This project adheres to the **Rust AI Guidelines** for low-context, high-soundne
    - Assert specific error variants (`matches!`), never just `.is_err()`.
    - Never use wall-clock `thread::sleep` in tests; use virtual clocks or `tokio::time::pause()`.
    - Use property-based testing (`proptest`) for pure functions, codecs, and domain invariants.
-

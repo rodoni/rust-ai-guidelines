@@ -22,6 +22,7 @@ for skill in "$REPO_ROOT/skills/"*; do
 done
 
 # Copy custom agents/subagents
+bash "$REPO_ROOT/scripts/clean-legacy-agents.sh" "$DEST_DIR/.opencode/agents"
 cp -r "$REPO_ROOT/agents/"* "$DEST_DIR/.opencode/agents/"
 
 # Copy guidelines inside .opencode/ to keep project root clean
