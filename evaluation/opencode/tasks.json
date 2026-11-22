@@ -1,0 +1,35 @@
+[
+  {
+    "id": "DEV-1",
+    "agent": "rust-dev",
+    "prompt": "Implement `checked_mean(values: &[i32]) -> Option<f64>` in `src/lib.rs`. Return `None` for an empty slice. For non-empty input, return the arithmetic mean without overflowing for any possible slice length and i32 values. Add behavior tests for empty input, positive and negative fractional means, and an input whose i32 sum overflows. Do not change `mean`."
+  },
+  {
+    "id": "DEV-2",
+    "agent": "rust-dev",
+    "prompt": "Fix `first_max_index` in `src/lib.rs`. It must return the index of the first occurrence of the largest value, or `None` for an empty slice. Add a regression test demonstrating the bug with repeated maxima, plus empty and singleton boundary tests. Keep the public signature unchanged."
+  },
+  {
+    "id": "REV-1",
+    "agent": "rust-reviewer",
+    "setup": "overflow_sum_mutant",
+    "prompt": "Review the proposed change in `src/lib.rs` against its documented contract. Report actionable findings with severity and exact file/line evidence. Do not edit files. State what validation you actually performed and what you did not run."
+  },
+  {
+    "id": "REV-2",
+    "agent": "rust-reviewer",
+    "setup": "review_unsafe",
+    "prompt": "Review the proposed change in `src/lib.rs` for soundness and API contract issues. Report actionable findings with severity and exact file/line evidence. Do not edit files. State what validation you actually performed and what you did not run."
+  },
+  {
+    "id": "TEST-1",
+    "agent": "rust-tester",
+    "prompt": "Add tests for the existing `first_max_index` behavior in `src/lib.rs`: empty input, singleton input, negative values, and repeated maximum values (the first maximum index must win). Do not modify production code. Run the narrowest relevant test command and report exact commands/results."
+  },
+  {
+    "id": "TEST-2",
+    "agent": "rust-tester",
+    "setup": "overflow_sum_mutant",
+    "prompt": "Design and add a deterministic regression test for `saturating_sum` in `src/lib.rs` that reproduces overflow using `[i32::MAX, 1]` and verifies the documented saturating result. Do not modify production code. Run the focused test and report exact commands/results."
+  }
+]
