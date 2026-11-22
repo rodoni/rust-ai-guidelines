@@ -22,6 +22,7 @@ for skill in "$REPO_ROOT/skills/"*; do
 done
 
 # Copy specialized subagents
+bash "$REPO_ROOT/scripts/clean-legacy-agents.sh" "$DEST_DIR/.agents/agents"
 cp -r "$REPO_ROOT/agents/"* "$DEST_DIR/.agents/agents/"
 
 # Copy guidelines inside .agents/ to keep project root clean

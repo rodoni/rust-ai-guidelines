@@ -3,12 +3,9 @@
 This file configures the specialized Rust Agentic ecosystem for Google Antigravity.
 
 ## Registered Subagents (`.agents/agents/`)
-- **`rust-lead`**: Orchestration and architecture planner.
-- **`rust-api-architect`**: Public API design and traits.
-- **`rust-perf-optimizer`**: Memory and async throughput.
-- **`rust-safety-auditor`**: Soundness, unsafe, and FFI.
-- **`rust-reviewer`**: Exhaustive compliance, lints, and contract review.
-- **`rust-test-engineer`**: High-confidence unit, property-based (`proptest`), and TDD testing.
+- **`rust-dev`**: Plans and implements Rust changes, routing to API, performance, safety, concurrency, and FFI skills as needed.
+- **`rust-reviewer`**: Independently reviews changes and reports evidence-based, actionable findings within the available scope.
+- **`rust-tester`**: Designs and runs behavior-focused tests with workspace-appropriate verification.
 
 ## Available Skills (`.agents/skills/`)
 The skills are located under `.agents/skills/`:

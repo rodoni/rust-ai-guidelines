@@ -11,9 +11,6 @@ This repository follows the **Rust AI Guidelines** for low-context, high-soundne
 6. **Workspace**: Centralize dependencies under `[workspace.dependencies]` in root `Cargo.toml`.
 
 ## Available Specialized Roles (`.claude/agents/`)
-- `rust-lead`: Workspace architecture, crate decomposition, and planning.
-- `rust-api-architect`: Ergonomic public APIs, builders, and trait implementations.
-- `rust-perf-optimizer`: Memory reuse, fast hashers, and async stack tuning.
-- `rust-safety-auditor`: Unsafe soundness, FFI boundaries, and panic-free paths.
-- `rust-reviewer`: Exhaustive compliance review, clippy `#[expect]` overrides, and zero-omission code hygiene.
-- `rust-test-engineer`: High-confidence unit, property-based (`proptest`), and TDD testing.
+- `rust-dev`: Plans and implements changes, loading focused skills for APIs, performance, safety, concurrency, errors, and FFI.
+- `rust-reviewer`: Independently reviews changes and reports actionable, evidence-based findings within the inspected scope.
+- `rust-tester`: Designs and executes behavior-focused tests with deterministic, workspace-appropriate verification.

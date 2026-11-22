@@ -42,6 +42,7 @@ for skill in "$REPO_ROOT/skills/"*; do
 done
 
 # Copy specialized subagents
+bash "$REPO_ROOT/scripts/clean-legacy-agents.sh" "$DEST_DIR/.cursor/agents"
 cp -r "$REPO_ROOT/agents/"* "$DEST_DIR/.cursor/agents/"
 
 echo " Cursor environment configured successfully (.cursor/rules/*.mdc)!"

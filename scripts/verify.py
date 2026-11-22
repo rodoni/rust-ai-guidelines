@@ -12,6 +12,18 @@ import tempfile
 import subprocess
 
 REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+EXPECTED_AGENTS = {"rust-dev", "rust-reviewer", "rust-tester"}
+LEGACY_AGENTS = {
+    "rust-lead", "rust-api-architect", "rust-perf-optimizer",
+    "rust-safety-auditor", "rust-test-engineer",
+}
+AGENT_TARGET_DIRS = {
+    "antigravity": ".agents/agents",
+    "opencode": ".opencode/agents",
+    "kilocode": ".kilo/agents",
+    "cursor": ".cursor/agents",
+    "claude": ".claude/agents",
+}
 
 errors = []
 
@@ -95,6 +107,63 @@ def check_rule_references():
     else:
         success("All atomic rules are indexed in master skill rust-guidelines/SKILL.md.")
 
+    catalog_links = set(re.findall(r'\[`([a-z0-9-]+)`\]\(rules/[^)]+\)', readme_text))
+    if catalog_links != rules_on_disk:
+        error(f"README rule catalog mismatch: missing={rules_on_disk - catalog_links}, extra={catalog_links - rules_on_disk}")
+    else:
+        success(f"README catalog indexes all {len(rules_on_disk)} rule files.")
+
+def check_agents():
+    print("\n--- Checking Agent Set and Operational References ---")
+    agent_dir = os.path.join(REPO_ROOT, "agents")
+    agent_files = {os.path.splitext(os.path.basename(path))[0]
+                   for path in glob.glob(os.path.join(agent_dir, "*.md"))}
+    if agent_files != EXPECTED_AGENTS:
+        error(f"Expected exactly {sorted(EXPECTED_AGENTS)} in agents/, found {sorted(agent_files)}")
+
+    for agent in EXPECTED_AGENTS:
+        path = os.path.join(agent_dir, f"{agent}.md")
+        if not os.path.isfile(path):
+            error(f"Missing agent definition: {path}")
+            continue
+        with open(path, "r", encoding="utf-8") as f:
+            text = f.read()
+        if not re.search(rf"(?m)^name:\s*{re.escape(agent)}\s*$", text):
+            error(f"{path} frontmatter name does not match {agent}")
+
+    persona_docs = [
+        "targets/antigravity/AGENTS.md", "targets/opencode/AGENTS.md",
+        "targets/kilocode/AGENTS.md", "targets/claude/CLAUDE.md",
+        "targets/copilot/copilot-instructions.md",
+    ]
+    for relative_path in persona_docs:
+        path = os.path.join(REPO_ROOT, relative_path)
+        with open(path, "r", encoding="utf-8") as f:
+            text = f.read()
+        missing = {agent for agent in EXPECTED_AGENTS if f"`{agent}`" not in text and f"{agent}" not in text}
+        if missing:
+            error(f"{relative_path} does not document personas: {sorted(missing)}")
+
+    operational_roots = ["README.md", "targets", "scripts", "sync.sh", "agents"]
+    for entry in operational_roots:
+        path = os.path.join(REPO_ROOT, entry)
+        paths = [path] if os.path.isfile(path) else glob.glob(os.path.join(path, "**", "*"), recursive=True)
+        for candidate in paths:
+            if not os.path.isfile(candidate) or os.path.basename(candidate) in {
+                "clean-legacy-agents.sh", "verify.py"
+            }:
+                continue
+            try:
+                with open(candidate, "r", encoding="utf-8") as f:
+                    text = f.read()
+            except (UnicodeDecodeError, OSError):
+                continue
+            for legacy in LEGACY_AGENTS:
+                if re.search(rf"(?<![A-Za-z0-9_-]){re.escape(legacy)}(?![A-Za-z0-9_-])", text):
+                    error(f"Obsolete operational agent reference {legacy} in {candidate}")
+
+    success("Source agent IDs and operational references checked.")
+
 def check_markdown_links():
     print("\n--- 3. Checking Relative Markdown Links ---")
     checked_files = 0
@@ -139,6 +208,34 @@ def check_target_sync():
             error(f"sync.sh all failed:\n{result.stderr}")
             return
 
+        # Simulate a previously provisioned installation without touching user files.
+        for relative_dir in AGENT_TARGET_DIRS.values():
+            deployed_agents = os.path.join(tmpdir, relative_dir)
+            for legacy in LEGACY_AGENTS:
+                with open(os.path.join(deployed_agents, f"{legacy}.md"), "w", encoding="utf-8") as f:
+                    f.write("legacy managed agent")
+            with open(os.path.join(deployed_agents, "user-agent.md"), "w", encoding="utf-8") as f:
+                f.write("user content")
+
+        update_result = subprocess.run(
+            ["bash", sync_script, "all", tmpdir],
+            capture_output=True,
+            text=True,
+            cwd=tmpdir,
+        )
+        if update_result.returncode != 0:
+            error(f"sync.sh update failed:\n{update_result.stderr}")
+            return
+
+        for target, relative_dir in AGENT_TARGET_DIRS.items():
+            deployed_agents = os.path.join(tmpdir, relative_dir)
+            actual = {os.path.splitext(name)[0] for name in os.listdir(deployed_agents)
+                      if name.endswith(".md") and os.path.isfile(os.path.join(deployed_agents, name))}
+            if actual != EXPECTED_AGENTS | {"user-agent"}:
+                error(f"{target} agent update mismatch: found {sorted(actual)}")
+            if not os.path.isfile(os.path.join(deployed_agents, "user-agent.md")):
+                error(f"{target} update removed unrelated user agent")
+
         expected_paths = [
             os.path.join(tmpdir, ".agents", "rules"),
             os.path.join(tmpdir, ".agents", "skills"),
@@ -176,7 +273,7 @@ def check_target_sync():
             if os.path.exists(os.path.join(tmpdir, ".agents")) or os.path.exists(os.path.join(tmpdir, ".kilo")):
                 error("sync.sh clean all left leftover directories")
 
-        success("sync.sh deploy and clean passed across all targets in isolated temp directory.")
+        success("sync.sh deploy, selective agent migration, and clean passed across targets.")
 
 def main():
     print("==============================================")
@@ -185,6 +282,7 @@ def main():
 
     check_rules_structure()
     check_rule_references()
+    check_agents()
     check_markdown_links()
     check_target_sync()
 

@@ -11,12 +11,9 @@ This project adheres to the **Rust AI Guidelines** for low-context, high-soundne
 
 ## Custom Subagents (`.kilo/agents/`)
 Specialized subagents available in this project (invocable via `@agent-name` or through delegation):
-- **`rust-lead`**: Workspace orchestration, architectural boundaries, and planning.
-- **`rust-api-architect`**: Ergonomic public API design, RFC 430 conventions, traits, and Newtypes.
-- **`rust-perf-optimizer`**: Memory layout, buffer re-use, mimalloc, and async throughput.
-- **`rust-safety-auditor`**: Soundness verification, `unsafe` scope minimization, and FFI boundaries.
-- **`rust-reviewer`**: Exhaustive compliance review, lints with `#[expect]`, and contracts with zero omissions.
-- **`rust-test-engineer`**: High-confidence unit, property-based (`proptest`), and TDD testing.
+- **`rust-dev`**: Plans and implements changes, routing to relevant domain skills for APIs, performance, safety, concurrency, and FFI.
+- **`rust-reviewer`**: Independently reviews changes and reports evidence-based findings within the inspected scope.
+- **`rust-tester`**: Designs and executes behavior-focused tests and workspace-appropriate verification.
 
 ## Skills (`.kilo/skills/`)
 Modular domain skills loaded on demand:

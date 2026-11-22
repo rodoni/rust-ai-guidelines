@@ -24,7 +24,7 @@ Diferente de abordagens ingênuas que despejam livros inteiros na janela de cont
 6. **Resiliência e Observabilidade Corporativa**: Telemetria estruturada (`tracing`), separação entre logging e saída deliberada de CLI, features preferencialmente aditivas e `[workspace.dependencies]` centralizado.
 7. **Engenharia de Testes de Alta Confiança**: Testes baseados em propriedades (`proptest`), fakes leves em memória, eliminação de sleeps em tempo virtual e asserções estritas de variantes de erro.
 
-> ⚡ **Zero Token Waste**: Cada regra é atômica (30 a 60 linhas), auto-contida e carregada **sob demanda** pelos agentes especializados.
+> ⚡ **Zero Token Waste**: Cada regra é atômica, auto-contida e carregada **sob demanda** pelos agentes.
 
 ---
 
@@ -42,29 +42,23 @@ Projetado para funcionar de forma nativa e sem fricção em múltiplos ambientes
 
 ---
 
-## 🧠 Agentes Especializados (`agents/`)
+## 🧠 Agentes (`agents/`)
 
-Em vez de sobrecarregar um único prompt genérico com dezenas de milhares de tokens, o trabalho é dividido entre agentes com escopos precisos:
+Três personas cobrem implementação, revisão independente e testes. As regras atômicas e skills temáticas são carregadas sob demanda, sem duplicar seus catálogos nos agentes:
 
 | Agente | Arquivo | Responsabilidade |
 |---|---|---|
-| **`rust-lead`** | [`agents/rust-lead.md`](agents/rust-lead.md) | Orquestração Spec-First, passos atômicos e triagem de tarefas. |
-| **`rust-api-architect`** | [`agents/rust-api-architect.md`](agents/rust-api-architect.md) | Design de APIs públicas, convenções RFC 430, builders, Typestate, Newtypes e traits. |
-| **`rust-perf-optimizer`** | [`agents/rust-perf-optimizer.md`](agents/rust-perf-optimizer.md) | Otimização de memória, layout de structs, padding, cache lines, buffers e async stack. |
-| **`rust-safety-auditor`** | [`agents/rust-safety-auditor.md`](agents/rust-safety-auditor.md) | Auditoria de `unsafe`, ordenação atômica, lock hierarchy, sound boundaries e debugging sistemático. |
-| **`rust-reviewer`** | [`agents/rust-reviewer.md`](agents/rust-reviewer.md) | Guardião dos Verification Gates, TDD, lints com `#[expect]` e conformidade com zero omissões. |
-| **`rust-test-engineer`** | [`agents/rust-test-engineer.md`](agents/rust-test-engineer.md) | Engenharia de testes determinísticos, property-based (`proptest`), TDD e fixtures. |
+| **`rust-dev`** | [`agents/rust-dev.md`](agents/rust-dev.md) | Triagem, planejamento Spec-First e implementação ponta a ponta; roteia para skills de API, performance, segurança, concorrência e FFI. |
+| **`rust-reviewer`** | [`agents/rust-reviewer.md`](agents/rust-reviewer.md) | Revisão independente baseada em evidências, com achados acionáveis e limites de escopo explícitos. |
+| **`rust-tester`** | [`agents/rust-tester.md`](agents/rust-tester.md) | Design e execução de testes de comportamento, limites e invariantes com gates apropriados ao workspace. |
 
 ### 📊 Matriz de Mapeamento: Agentes ➔ Skills ➔ Regras
 
 | Agente | Skill Primária | Skills Secundárias | Regras Atômicas Enforced (`rules/*.md`) |
 |---|---|---|---|
-| **`rust-lead`** | [`rust-guidelines`](skills/rust-guidelines/SKILL.md) *(Master Hub)* | [`rust-agentic-workflow`](skills/rust-agentic-workflow/SKILL.md), Todas as 7 skills temáticas | `wf-spec-first`, `wf-atomic-steps`, `m-cargo-workspace`, `m-smaller-crates`, `m-mockable-syscalls`, `m-design-for-ai` |
-| **`rust-api-architect`** | [`rust-api`](skills/rust-api/SKILL.md) *(API & Ergonomia)* | `rust-resilience-app`, `rust-macros` | `c-case`, `c-conv`, `c-getter`, `c-common-traits`, `c-send-sync`, `c-newtype`, `c-sealed`, `c-conv-traits`, `c-custom-type`, `c-deref`, `c-generic`, `c-smart-ptr`, `m-weasel-words`, `m-regular-fn`, `m-avoid-wrappers`, `m-dont-leak-types`, `m-di-hierarchy`, `m-init-builder`, `m-services-clone`, `m-async-fn`, `m-macro-last-resort`, `m-example-over-proc`, `m-proc-impl`, `m-macro-helpers`, `er-typestate-pattern`, `er-reexport-dependencies`, `er-closure-traits` |
-| **`rust-perf-optimizer`** | [`rust-perf`](skills/rust-perf/SKILL.md) *(Memória & Layout)* | [`rust-concurrency`](skills/rust-concurrency/SKILL.md), `rust-api`, `rust-resilience-app` | `mem-with-capacity`, `mem-reuse-collections`, `m-box-dst`, `m-shrink-to-fit`, `m-fast-hasher`, `m-async-stack-size`, `m-yield-points`, `m-mimalloc-apps`, `sync-cacheline-padding`, `atomic-cas-weak-loops`, `sys-struct-field-ordering`, `sys-iterator-zero-allocation`, `sys-dispatch-tradeoff` |
-| **`rust-safety-auditor`** | [`rust-safety`](skills/rust-safety/SKILL.md) *(Soundness & Concorrência)* | [`rust-concurrency`](skills/rust-concurrency/SKILL.md), [`rust-ffi`](skills/rust-ffi/SKILL.md), `rust-api` | `unsafe-safety-comment`, `unsafe-minimize-scope`, `m-unsound-prevention`, `m-panic-on-bug`, `m-errors-canonical`, `c-dtor-fail`, `m-avoid-statics`, `m-strong-types-guard`, `m-ffi-translates`, `m-isolate-dll-state`, `m-ffi-naming`, `atomic-ordering-pair`, `sync-avoid-spinlock`, `sync-lock-hierarchy`, `er-casts-avoid-as`, `er-raii-guard`, `wf-debug-systematic` |
-| **`rust-reviewer`** | [`rust-resilience-app`](skills/rust-resilience-app/SKILL.md) *(Lints & Contratos)* | [`rust-agentic-workflow`](skills/rust-agentic-workflow/SKILL.md), `rust-safety`, `rust-concurrency`, `rust-api`, `rust-perf` | `wf-verification-gates`, `wf-tdd-loop`, `m-lint-override-expect`, `c-failure`, `m-macro-helpers`, `m-test-util`, `m-app-error`, `m-design-for-ai`, `m-log-not-print`, `m-log-structured`, `m-features-additive`, `atomic-ordering-pair`, `sync-avoid-spinlock`, `er-casts-avoid-as` |
-| **`rust-test-engineer`** | [`rust-testing`](skills/rust-testing/SKILL.md) *(Testes & Invariantes)* | [`rust-agentic-workflow`](skills/rust-agentic-workflow/SKILL.md), `rust-resilience-app`, `rust-api` | `test-property-based`, `test-assert-error-variants`, `test-deterministic-no-sleep`, `test-fakes-over-heavy-mocks`, `test-behavior-not-internals`, `test-snapshot-for-complex-data`, `wf-tdd-loop`, `wf-verification-gates`, `m-test-util`, `m-mockable-syscalls` |
+| **`rust-dev`** | [`rust-guidelines`](skills/rust-guidelines/SKILL.md) *(Hub)* | `rust-agentic-workflow`, `rust-api`, `rust-perf`, `rust-concurrency`, `rust-safety`, `rust-ffi`, `rust-macros`, `rust-resilience-app` | `wf-spec-first`, `wf-atomic-steps`, `m-cargo-workspace`, `m-smaller-crates`, `m-mockable-syscalls`, `m-design-for-ai`; regras específicas são consultadas sob demanda conforme a tarefa |
+| **`rust-reviewer`** | [`rust-resilience-app`](skills/rust-resilience-app/SKILL.md) *(Contratos & Lints)* | `rust-agentic-workflow`, `rust-safety`, `rust-concurrency`, `rust-api`, `rust-perf`, `rust-ffi` | `m-lint-override-expect`, `c-failure`, `m-macro-helpers`, `m-app-error`, `m-log-not-print`, `m-log-structured`, `m-features-additive`, `unsafe-safety-comment`, `m-unsound-prevention`, `atomic-ordering-pair`, `sync-avoid-spinlock`, `er-casts-avoid-as`, `wf-verification-gates` |
+| **`rust-tester`** | [`rust-testing`](skills/rust-testing/SKILL.md) *(Testes & Invariantes)* | `rust-agentic-workflow`, `rust-resilience-app` | `test-property-based`, `test-assert-error-variants`, `test-deterministic-no-sleep`, `test-fakes-over-heavy-mocks`, `test-behavior-not-internals`, `test-snapshot-for-complex-data`, `wf-tdd-loop`, `wf-verification-gates`, `m-test-util`, `m-mockable-syscalls` |
 
 ---
 
@@ -96,7 +90,7 @@ As regras em [`rules/`](rules/) seguem uma estrutura padronizada, com conteúdo 
 
 ### 📋 Catálogo Completo das 78 Regras Atômicas
 
-Tabela consolidada de todas as **78 regras essenciais** implementadas no ecossistema:
+Tabela consolidada das regras essenciais implementadas no ecossistema (78 arquivos em `rules/`):
 
 | Categoria | Regra | Origem | Diretriz Atômica |
 |---|---|---|---|
