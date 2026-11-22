@@ -20,7 +20,7 @@ Available targets (Deploy):
   all         [dest]  Deploy to all targets simultaneously
 
 Utility commands:
-  clean <target> [dest] Remove deployed guideline directories for target (or 'all')
+  clean <target> [dest] Remove unchanged managed files; preserve user content
   verify                Run automated rule linting and link integrity checks
   find <keyword>        Search rules by keyword
   query <rule-id>       Display full rule content
@@ -38,48 +38,7 @@ EOF
 }
 
 clean_target() {
-    local target="$1"
-    local dest="${2:-.}"
-
-    case "$target" in
-        antigravity)
-            rm -rf "$dest/.agents"
-            echo " Removed $dest/.agents"
-            ;;
-        opencode)
-            rm -rf "$dest/.opencode"
-            echo " Removed $dest/.opencode"
-            ;;
-        kilocode)
-            rm -rf "$dest/.kilo"
-            echo " Removed $dest/.kilo"
-            ;;
-        cursor)
-            rm -rf "$dest/.cursor"
-            echo " Removed $dest/.cursor"
-            ;;
-        claude)
-            rm -rf "$dest/.claude"
-            echo " Removed $dest/.claude"
-            ;;
-        copilot)
-            rm -f "$dest/.github/copilot-instructions.md"
-            echo " Removed $dest/.github/copilot-instructions.md"
-            ;;
-        all)
-            clean_target antigravity "$dest"
-            clean_target opencode "$dest"
-            clean_target kilocode "$dest"
-            clean_target cursor "$dest"
-            clean_target claude "$dest"
-            clean_target copilot "$dest"
-            echo " Cleaned all guideline targets in $dest"
-            ;;
-        *)
-            echo "Unknown target to clean: $target"
-            exit 1
-            ;;
-    esac
+    python3 "$REPO_ROOT/scripts/deploy.py" clean "$1" "${2:-.}"
 }
 
 find_rules() {

@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Isolate deployed rule filenames by language and rewrite links for every target.
+- Preserve custom and edited files using per-package ownership manifests.
+- Update shared instruction files through delimited, independently managed blocks.
+- Fix Cursor skill links and include Vue components in TypeScript rule globs.
+- Preserve existing Kilo configuration; create the default at project root when absent.
+- Add regression coverage for deployment, updates, cleanup, conflicts, and coexistence.
+
+
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 O formato segue as convenções de [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/), e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).

@@ -219,3 +219,33 @@ Para acompanhar as atualizações, correções e novas adições ao ecossistema,
 ## 📄 Licença
 
 Distribuído sob a licença MIT. Veja `LICENSE` para detalhes.
+
+## Instalação segura e atualização
+
+A instalação requer Bash e Python 3.10+. Regras distribuídas recebem um prefixo
+por linguagem (`rust--` ou `ts--`), permitindo instalar os dois pacotes no mesmo
+projeto. Os links das skills são adaptados ao destino, inclusive `.mdc` no Cursor;
+o pacote TypeScript inclui componentes `.vue` nos padrões do Cursor.
+
+Cada integração registra hashes em `.guidelines-<linguagem>.json`. Atualizações
+preservam arquivos personalizados e interrompem a instalação daquele destino
+quando encontram um arquivo gerenciado editado. Revise o conflito antes de repetir.
+`clean` remove somente arquivos e blocos cujo conteúdo corresponde ao registro;
+arquivos editados, configurações existentes e conteúdo de outros pacotes permanecem.
+Não apague os manifests enquanto quiser atualizar ou remover a instalação.
+
+As instruções em `AGENTS.md`, `CLAUDE.md` e `copilot-instructions.md` usam blocos
+identificados por linguagem. Atualizações substituem somente o bloco gerenciado;
+coloque instruções próprias fora dele. Templates antigos idênticos à versão fonte
+são migrados; versões históricas diferentes são preservadas para revisão manual.
+A limpeza sem manifest preserva integralmente instalações antigas. Regras antigas
+`.md` e `.mdc` idênticas à saída do instalador anterior com o conteúdo fonte atual
+são retiradas durante a migração. Outras versões históricas e agentes antigos
+não reconhecidos devem ser revisados manualmente.
+O instalador cria `kilo.jsonc` na raiz quando ausente e o preserva nas atualizações
+e na limpeza; caso você configure `instructions` explicitamente,
+inclua `.kilo/rules/*.md` no arquivo de configuração usado pelo seu ambiente.
+
+A verificação executa testes de instalação, links gerados, repetição, atualização,
+limpeza e preservação de conteúdo. Quando ambos os repositórios estão lado a lado,
+também testa a coexistência das linguagens em todos os destinos.

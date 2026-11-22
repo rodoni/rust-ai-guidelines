@@ -193,87 +193,13 @@ def check_markdown_links():
         success(f"Checked relative links in {checked_files} files (0 broken).")
 
 def check_target_sync():
-    print("\n--- 4. Checking Target Synchronization E2E ---")
-    with tempfile.TemporaryDirectory() as tmpdir:
-        sync_script = os.path.join(REPO_ROOT, "sync.sh")
+    print("\n--- Checking Deployment Ownership and Integration ---")
+    result = subprocess.run([sys.executable, os.path.join(REPO_ROOT, "scripts", "test_deployment.py")])
+    if result.returncode:
+        error("Deployment regression tests failed")
+    else:
+        success("Deployment regression tests passed")
 
-        # Deploy all
-        result = subprocess.run(
-            ["bash", sync_script, "all", tmpdir],
-            capture_output=True,
-            text=True,
-            cwd=tmpdir # Run from inside tmpdir to test PWD independence!
-        )
-        if result.returncode != 0:
-            error(f"sync.sh all failed:\n{result.stderr}")
-            return
-
-        # Simulate a previously provisioned installation without touching user files.
-        for relative_dir in AGENT_TARGET_DIRS.values():
-            deployed_agents = os.path.join(tmpdir, relative_dir)
-            for legacy in LEGACY_AGENTS:
-                with open(os.path.join(deployed_agents, f"{legacy}.md"), "w", encoding="utf-8") as f:
-                    f.write("legacy managed agent")
-            with open(os.path.join(deployed_agents, "user-agent.md"), "w", encoding="utf-8") as f:
-                f.write("user content")
-
-        update_result = subprocess.run(
-            ["bash", sync_script, "all", tmpdir],
-            capture_output=True,
-            text=True,
-            cwd=tmpdir,
-        )
-        if update_result.returncode != 0:
-            error(f"sync.sh update failed:\n{update_result.stderr}")
-            return
-
-        for target, relative_dir in AGENT_TARGET_DIRS.items():
-            deployed_agents = os.path.join(tmpdir, relative_dir)
-            actual = {os.path.splitext(name)[0] for name in os.listdir(deployed_agents)
-                      if name.endswith(".md") and os.path.isfile(os.path.join(deployed_agents, name))}
-            if actual != EXPECTED_AGENTS | {"user-agent"}:
-                error(f"{target} agent update mismatch: found {sorted(actual)}")
-            if not os.path.isfile(os.path.join(deployed_agents, "user-agent.md")):
-                error(f"{target} update removed unrelated user agent")
-
-        expected_paths = [
-            os.path.join(tmpdir, ".agents", "rules"),
-            os.path.join(tmpdir, ".agents", "skills"),
-            os.path.join(tmpdir, ".agents", "agents"),
-            os.path.join(tmpdir, ".agents", "AGENTS.md"),
-            os.path.join(tmpdir, ".opencode", "rules"),
-            os.path.join(tmpdir, ".opencode", "skills"),
-            os.path.join(tmpdir, ".opencode", "agents"),
-            os.path.join(tmpdir, ".opencode", "AGENTS.md"),
-            os.path.join(tmpdir, ".kilo", "rules"),
-            os.path.join(tmpdir, ".kilo", "skills"),
-            os.path.join(tmpdir, ".kilo", "agents"),
-            os.path.join(tmpdir, ".kilo", "AGENTS.md"),
-            os.path.join(tmpdir, "kilo.jsonc"),
-            os.path.join(tmpdir, ".cursor", "rules"),
-            os.path.join(tmpdir, ".claude", "rules"),
-            os.path.join(tmpdir, "CLAUDE.md"),
-            os.path.join(tmpdir, ".github", "copilot-instructions.md"),
-        ]
-
-        for p in expected_paths:
-            if not os.path.exists(p):
-                error(f"Expected deployed path does not exist: {p}")
-
-        # Check clean command
-        clean_result = subprocess.run(
-            ["bash", sync_script, "clean", "all", tmpdir],
-            capture_output=True,
-            text=True,
-            cwd=tmpdir
-        )
-        if clean_result.returncode != 0:
-            error(f"sync.sh clean all failed:\n{clean_result.stderr}")
-        else:
-            if os.path.exists(os.path.join(tmpdir, ".agents")) or os.path.exists(os.path.join(tmpdir, ".kilo")):
-                error("sync.sh clean all left leftover directories")
-
-        success("sync.sh deploy, selective agent migration, and clean passed across targets.")
 
 def main():
     print("==============================================")
