@@ -18,3 +18,9 @@ Thumbs.db
 /.claude/
 /CLAUDE.md
 /.github/copilot-instructions.md
+
+# Local benchmark outputs may contain proprietary prompts or code
+/evaluation/opencode/results/raw/
+/evaluation/opencode/fixture/work/
+/evaluation/opencode/fixture/**/target/
+/evaluation/opencode/__pycache__/
